@@ -1,0 +1,2050 @@
+<!DOCTYPE html>
+
+<html class="dark scroll-smooth" lang="az">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Parallel Business — AI Decision Simulator</title>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Canvas Confetti -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            dark: {
+              950: '#060911',
+              900: '#0B1120',
+              850: '#0F172A',
+              800: '#1E293B',
+              700: '#334155'
+            },
+            light: {
+              50: '#F8FAFC',
+              100: '#F1F5F9',
+              200: '#E2E8F0',
+              300: '#CBD5E1',
+              400: '#94A3B8',
+              800: '#1E293B',
+              900: '#0F172A'
+            },
+            neon: {
+              cyan: '#06B6D4',
+              violet: '#8B5CF6',
+              emerald: '#10B981',
+              rose: '#F43F5E',
+              amber: '#F59E0B'
+            }
+          },
+          animation: {
+            'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'float 6s ease-in-out infinite',
+            'glow': 'glow 3s ease-in-out infinite alternate',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-10px)' },
+            },
+            glow: {
+              '0%': { opacity: '0.4', filter: 'blur(20px)' },
+              '100%': { opacity: '0.8', filter: 'blur(35px)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    /* Calm Executive Dark Palette (Gözü dincəldən dərin antrasit) */
+    html.dark body {
+      background-color: #0B0F19;
+      color: #E2E8F0;
+    }
+    html.dark .glass-panel {
+      background: rgba(18, 24, 38, 0.85);
+      border: 1px solid #1F293D;
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.25);
+    }
+    html.dark .glass-card {
+      background: #121826;
+      border: 1px solid #1F293D;
+      box-shadow: 0 2px 12px -2px rgba(0, 0, 0, 0.2);
+    }
+    html.dark .glass-card:hover {
+      border-color: #3B82F6;
+      box-shadow: 0 4px 20px -2px rgba(59, 130, 246, 0.12);
+    }
+    html.dark .input-field {
+      background: #0E1320;
+      border: 1px solid #222C42;
+      color: #F1F5F9;
+    }
+    html.dark .input-field:focus {
+      border-color: #3B82F6;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+    }
+    html.dark .text-adaptive-head { color: #F8FAFC; }
+    html.dark .text-adaptive-sub { color: #CBD5E1; }
+    html.dark .text-adaptive-muted { color: #94A3B8; }
+    html.dark .border-adaptive { border-color: #1F293D; }
+
+    /* Clean Daylight Bright Theme (Gözü qamaşdırmayan sakit gündüz rejimi) */
+    html:not(.dark) body {
+      background-color: #F8FAFC;
+      color: #0F172A;
+    }
+    html:not(.dark) .glass-panel {
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.05);
+    }
+    html:not(.dark) .glass-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 2px 10px -2px rgba(15, 23, 42, 0.04);
+    }
+    html:not(.dark) .glass-card:hover {
+      border-color: #3B82F6;
+      box-shadow: 0 6px 18px -2px rgba(59, 130, 246, 0.1);
+    }
+    html:not(.dark) .input-field {
+      background: #F8FAFC;
+      border: 1px solid #CBD5E1;
+      color: #0F172A;
+    }
+    html:not(.dark) .input-field:focus {
+      border-color: #3B82F6;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+    }
+    html:not(.dark) .text-adaptive-head { color: #0F172A; }
+    html:not(.dark) .text-adaptive-sub { color: #334155; }
+    html:not(.dark) .text-adaptive-muted { color: #64748B; }
+    html:not(.dark) .border-adaptive { border-color: #E2E8F0; }
+    html:not(.dark) nav {
+      background: rgba(255, 255, 255, 0.92);
+      border-bottom: 1px solid #E2E8F0;
+    }
+    html:not(.dark) aside {
+      background: #F1F5F9;
+      border-bottom: 1px solid #E2E8F0;
+      color: #334155;
+    }
+    html:not(.dark) footer {
+      background-color: #FFFFFF;
+      border-top: 1px solid #E2E8F0;
+      color: #64748B;
+    }
+  </style>
+</head>
+<body class="min-h-screen selection:bg-blue-600 text-white selection:text-white custom-scrollbar overflow-x-hidden font-sans transition-colors duration-300">
+<!-- Ambient Background Glows -->
+<div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+<div class="absolute -top-40 -left-40 w-96 h-96 bg-blue-600 text-white/15 dark:bg-cyan-600/15 rounded-full blur-3xl animate-glow"></div>
+<div class="absolute top-1/3 -right-40 w-[500px] h-[500px] bg-violet-500/10 dark:bg-violet-600/15 rounded-full blur-3xl animate-glow" style="animation-delay: 1.5s;"></div>
+<div class="absolute -bottom-40 left-1/3 w-[450px] h-[450px] bg-emerald-500/10 dark:bg-emerald-600/10 rounded-full blur-3xl animate-glow" style="animation-delay: 2.5s;"></div>
+<div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(7,11,20,0.4)_80%)] dark:bg-[radial-gradient(circle_at_center,transparent_0%,#070B14_80%)]"></div>
+</div>
+<!-- Top Announcement Bar -->
+<aside aria-label="Announcement" class="relative z-50 py-2 px-4 text-xs font-medium text-center flex items-center justify-center gap-3 transition-colors">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-blue-500/15 text-blue-600 dark:text-blue-300 font-semibold border border-blue-500/30 text-[11px]" data-i18n="announcement_badge">
+      YENİ
+    </span>
+<span data-i18n="announcement_text" id="txt-announcement">
+      Süni İntellektlə Qərar Simulyatoru 2.4 — Sahibkarlar üçün 14 günlük limitsiz demo aktivdir!
+    </span>
+<a class="text-blue-600 dark:text-blue-400 hover:underline font-semibold ml-2" data-i18n="announcement_link" href="#simulator">
+      İndi Sınaqdan Keçir →
+    </a>
+</aside>
+<!-- Sticky Navbar -->
+<nav class="sticky top-0 z-40 glass-panel border-b border-adaptive px-4 lg:px-12 py-3.5 transition-all duration-200">
+<div class="max-w-7xl mx-auto flex items-center justify-between">
+<!-- Brand Logo -->
+<a class="flex items-center gap-3 group" href="#">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-500 to-violet-500 p-[1.5px] shadow-lg shadow-cyan-500/20 group-hover:shadow-cyan-500/40 transition">
+<div class="w-full h-full bg-white dark:bg-slate-950 rounded-[10px] flex items-center justify-center">
+<i class="w-5 h-5 text-blue-500 dark:text-blue-400 transform group-hover:rotate-12 transition" data-lucide="git-fork"></i>
+</div>
+</div>
+<div class="flex flex-col">
+<span class="text-lg font-extrabold tracking-tight text-adaptive-head flex items-center gap-2">
+            PARALLEL BUSINESS
+</span>
+<span class="text-[11px] text-adaptive-muted font-normal tracking-wide" data-i18n="brand_subtitle">
+            Alternativ Gələcək Mühərriki
+          </span>
+</div>
+</a>
+<!-- Desktop Nav Links -->
+<div class="hidden md:flex items-center gap-7 text-sm font-medium text-adaptive-sub">
+<a class="hover:text-blue-500 dark:hover:text-blue-400 transition flex items-center gap-1.5" data-i18n="nav_simulator" href="#simulator">
+<i class="w-4 h-4 text-blue-500 dark:text-blue-400" data-lucide="play-circle"></i> Simulyator
+        </a>
+<a class="hover:text-blue-500 dark:hover:text-blue-400 transition flex items-center gap-1.5" data-i18n="nav_board" href="#board">
+<i class="w-4 h-4 text-emerald-500 dark:text-emerald-400" data-lucide="users"></i> AI İdarə Heyəti
+        </a>
+<a class="hover:text-blue-500 dark:hover:text-blue-400 transition flex items-center gap-1.5" data-i18n="nav_pricing" href="#pricing">
+<i class="w-4 h-4 text-amber-500 dark:text-amber-400" data-lucide="sparkles"></i> Abunə Planları
+        </a>
+<a class="hover:text-blue-500 dark:hover:text-blue-400 transition" data-i18n="nav_how_it_works" href="#how-it-works">
+          Necə İşləyir?
+        </a>
+</div>
+<!-- Action Buttons + Language Switcher + Theme Switcher -->
+<div class="flex items-center gap-3">
+<!-- Language Switcher Control -->
+<div class="flex items-center p-1 rounded-xl bg-slate-200/80 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-xs font-bold font-mono">
+<button class="px-2 py-1 rounded-lg transition-all text-blue-600 dark:text-blue-300 bg-white dark:bg-slate-800 shadow-sm" id="lang-btn-az" onclick="setLanguage('az')">
+            AZ
+          </button>
+<button class="px-2 py-1 rounded-lg transition-all text-slate-600 dark:text-slate-400 hover:text-blue-500" id="lang-btn-en" onclick="setLanguage('en')">
+            EN
+          </button>
+<button class="px-2 py-1 rounded-lg transition-all text-slate-600 dark:text-slate-400 hover:text-blue-500" id="lang-btn-ru" onclick="setLanguage('ru')">
+            RU
+          </button>
+</div>
+<!-- Dark / Bright Mode Toggle -->
+<button class="p-2 rounded-xl bg-slate-200/80 dark:bg-slate-900 hover:bg-slate-300 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-800 transition" id="theme-toggle-btn" onclick="toggleTheme()" title="Mövzunu dəyiş / Change Theme">
+<i class="w-4 h-4 text-amber-500" data-lucide="sun" id="theme-icon"></i>
+</button>
+<!-- Auth & CTA Buttons -->
+<button class="hidden sm:inline-flex text-xs font-semibold text-adaptive-sub px-3 py-2 rounded-lg border border-adaptive hover:border-slate-400 transition" data-i18n="btn_login" onclick="openAuthModal()">
+          Daxil Ol
+        </button>
+<a class="inline-flex items-center gap-2 text-xs font-bold text-slate-950 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white px-4 py-2.5 rounded-lg shadow-md shadow-blue-500/20 transition transform hover:scale-[1.02]" href="#simulator">
+<i class="w-3.5 h-3.5" data-lucide="cpu"></i>
+<span data-i18n="btn_launch_sim">Simulyasiya Başla</span>
+</a>
+</div>
+</div>
+</nav>
+<!-- Hero Section -->
+<header class="relative z-10 pt-10 pb-8 px-4 lg:px-8 max-w-5xl mx-auto text-center">
+<!-- Main Title -->
+<h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.15] max-w-4xl mx-auto text-adaptive-head">
+<span data-i18n="hero_title_1">Real qərar verməzdən əvvəl,</span><br/>
+<span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-teal-400 to-indigo-500" data-i18n="hero_title_2">
+        4 alternativ gələcəyinizi
+      </span> <span data-i18n="hero_title_3">simulyasiya edin.</span>
+</h1>
+<!-- Subtitle -->
+<p class="mt-6 text-base sm:text-lg text-adaptive-sub max-w-2xl mx-auto font-normal leading-relaxed" data-i18n="hero_desc">
+      “Qiyməti 10% artırsam nə olar?”, “İkinci filial açsam?”, “Reklama 3,000 AZN xərcləsəm?” Süni İntellekt real vaxtda minlərlə dəyişəni hesablayır və bahalı səhvlərdən qoruyur.
+    </p>
+<!-- Quick stats strip -->
+<div class="mt-10 flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-xs sm:text-sm text-adaptive-muted">
+<div class="flex items-center gap-2">
+<i class="w-4 h-4 text-blue-500" data-lucide="shield-check"></i>
+<span data-i18n="stat_zero_risk">Sıfır Risklə Qərar</span>
+</div>
+<div class="flex items-center gap-2">
+<i class="w-4 h-4 text-emerald-500" data-lucide="line-chart"></i>
+<span data-i18n="stat_monte_carlo">1,000 Monte Carlo İterasiyası</span>
+</div>
+<div class="flex items-center gap-2">
+<i class="w-4 h-4 text-amber-500" data-lucide="zap"></i>
+<span data-i18n="stat_speed">3 Saniyədə Nəticə</span>
+</div>
+<div class="flex items-center gap-2">
+<i class="w-4 h-4 text-violet-500" data-lucide="bot"></i>
+<span data-i18n="stat_ai_board">AI Direktorlar Şurası Rəyi</span>
+</div>
+</div>
+<!-- Hero CTA Buttons -->
+<div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+<a class="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-gradient-to-r from-blue-600 via-teal-500 to-emerald-500 hover:opacity-95 text-slate-950 font-bold text-sm shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2 transition transform hover:scale-[1.02]" href="#simulator">
+<i class="w-4 h-4" data-lucide="sparkles"></i>
+<span data-i18n="btn_hero_simulate">Öz Biznesinizi Simulyasiya Edin</span>
+</a>
+<a class="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-slate-200 dark:bg-slate-800/90 hover:bg-slate-300 dark:hover:bg-slate-700/80 border border-slate-300 dark:border-slate-700 text-adaptive-head font-semibold text-sm flex items-center justify-center gap-2 transition" href="#pricing">
+<i class="w-4 h-4 text-slate-500" data-lucide="credit-card"></i>
+<span data-i18n="btn_hero_pricing">Abunə Planlarına Bax</span>
+</a>
+</div>
+<!-- Live Ticker Banner -->
+<div class="mt-12 max-w-3xl mx-auto p-3 rounded-xl bg-white/70 dark:bg-slate-900/80 border border-blue-500/30 flex items-center gap-3 text-xs overflow-hidden shadow-sm">
+<span class="px-2 py-1 rounded bg-blue-500/15 text-blue-600 dark:text-blue-300 font-mono font-bold flex items-center gap-1.5 shrink-0" data-i18n="ticker_badge">
+<span class="w-1.5 h-1.5 rounded-full bg-blue-600 text-white animate-ping"></span> CANLI SİMULYASİYA
+      </span>
+<div class="text-adaptive-sub truncate text-left" data-i18n="ticker_content" id="live-ticker-text">
+        Kafe/Restoran: Qiymət +12% qaldırıldıqda müştərilərin 3.4%-i itirilir, lakin aylıq xalis mənfəət +4,200 AZN artır!
+      </div>
+</div>
+</header>
+<!-- SIMULATOR SECTION -->
+<section class="relative z-10 py-12 px-4 lg:px-8 max-w-7xl mx-auto" id="simulator">
+<!-- Section Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-8 pb-4 border-b border-adaptive gap-4">
+<div>
+<div class="text-xs font-mono font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400 flex items-center gap-2 mb-1">
+<i class="w-4 h-4" data-lucide="sliders"></i> <span data-i18n="sim_header_tag">İnteraktiv Qərar Laboratoriyası</span>
+</div>
+<h2 class="text-2xl sm:text-3xl font-bold text-adaptive-head" data-i18n="sim_header_title">Paralel Kainat Simulyatoru</h2>
+</div>
+<!-- Sector Preset Selectors -->
+<div class="inline-flex items-center p-1.5 rounded-2xl bg-slate-200/80 dark:bg-slate-900/90 border border-adaptive gap-1 flex-wrap shadow-inner">
+<span class="text-xs text-adaptive-muted font-medium shrink-0" data-i18n="sector_template_label">Sektor Şablonu:</span>
+<button class="ind-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-500/15 text-blue-600 dark:text-blue-300 border border-blue-500/40 hover:bg-blue-500/20 transition flex items-center gap-1.5" id="btn-ind-cafe" onclick="setIndustry('cafe')">
+          ☕ <span data-i18n="sector_cafe">Kafe/Restoran</span>
+</button>
+<button class="ind-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-200 dark:bg-slate-800 text-adaptive-sub border border-adaptive hover:bg-slate-300 dark:hover:bg-slate-700 transition flex items-center gap-1.5" id="btn-ind-retail" onclick="setIndustry('retail')">
+          🛒 <span data-i18n="sector_retail">Pərakəndə</span>
+</button>
+<button class="ind-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-200 dark:bg-slate-800 text-adaptive-sub border border-adaptive hover:bg-slate-300 dark:hover:bg-slate-700 transition flex items-center gap-1.5" id="btn-ind-saas" onclick="setIndustry('saas')">
+          💻 <span data-i18n="sector_saas">B2B SaaS</span>
+</button>
+<button class="ind-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-200 dark:bg-slate-800 text-adaptive-sub border border-adaptive hover:bg-slate-300 dark:hover:bg-slate-700 transition flex items-center gap-1.5" id="btn-ind-ecommerce" onclick="setIndustry('ecommerce')">
+          📦 <span data-i18n="sector_ecommerce">E-ticarət</span>
+</button>
+<button class="ind-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-200 dark:bg-slate-800 text-adaptive-sub border border-adaptive hover:bg-slate-300 dark:hover:bg-slate-700 transition flex items-center gap-1.5" id="btn-ind-services" onclick="setIndustry('services')">
+          💼 <span data-i18n="sector_services">Xidmət</span>
+</button>
+</div>
+</div>
+<!-- MAIN SIMULATOR GRID -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- LEFT COLUMN: Profile & Decision Controls (5 cols) -->
+<div class="lg:col-span-5 space-y-6">
+<!-- STEP 1: Current Business Profile -->
+<div class="glass-card p-5 rounded-2xl relative">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-sm font-bold text-adaptive-head flex items-center gap-2">
+<span class="w-5 h-5 rounded-md bg-blue-500/15 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xs font-mono font-bold">1</span>
+<span data-i18n="step1_title">Mövcud Biznes Göstəriciləriniz</span>
+</h3>
+<span class="text-[11px] text-blue-600 dark:text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded font-mono" data-i18n="step1_badge">Baza Metrikləri</span>
+</div>
+<div class="grid grid-cols-2 gap-3.5 text-xs">
+<div>
+<label class="block text-adaptive-muted mb-1" data-i18n="lbl_revenue">Aylıq Dövriyyə (AZN)</label>
+<div class="relative">
+<input class="w-full input-field rounded-lg px-3 py-2 font-mono text-xs focus:outline-none" id="inp-revenue" onchange="runLiveSimulation()" step="1000" type="number" value="28000"/>
+<span class="absolute right-2.5 top-2 text-[10px] text-slate-400 font-mono">₼</span>
+</div>
+</div>
+<div>
+<label class="block text-adaptive-muted mb-1" data-i18n="lbl_fixed_costs">Sabit Xərclər (İcarə+Maaş)</label>
+<div class="relative">
+<input class="w-full input-field rounded-lg px-3 py-2 font-mono text-xs focus:outline-none" id="inp-fixed-cost" onchange="runLiveSimulation()" step="500" type="number" value="11000"/>
+<span class="absolute right-2.5 top-2 text-[10px] text-slate-400 font-mono">₼</span>
+</div>
+</div>
+<div>
+<label class="block text-adaptive-muted mb-1" data-i18n="lbl_var_costs">Dəyişən Xərc Marjası (%)</label>
+<div class="relative">
+<input class="w-full input-field rounded-lg px-3 py-2 font-mono text-xs focus:outline-none" id="inp-var-cost" max="90" min="5" onchange="runLiveSimulation()" type="number" value="38"/>
+<span class="absolute right-2.5 top-2 text-[10px] text-slate-400 font-mono">%</span>
+</div>
+</div>
+<div>
+<label class="block text-adaptive-muted mb-1" data-i18n="lbl_customers">Aylıq Müştəri Sayı</label>
+<div class="relative">
+<input class="w-full input-field rounded-lg px-3 py-2 font-mono text-xs focus:outline-none" id="inp-customers" onchange="runLiveSimulation()" step="50" type="number" value="1100"/>
+<span class="absolute right-2.5 top-2 text-[10px] text-slate-400 font-mono" data-i18n="unit_people">nəfər</span>
+</div>
+</div>
+<div class="col-span-2">
+<div class="flex items-center justify-between text-adaptive-muted mb-1">
+<span data-i18n="lbl_cash_reserve">Mövcud Kassa Ehtiyatı (Cash Buffer):</span>
+<span class="text-blue-600 dark:text-blue-400 font-mono font-bold" id="txt-cash-val">25,000 AZN</span>
+</div>
+<input class="w-full accent-cyan-500 h-1.5 bg-slate-300 dark:bg-slate-800 rounded-lg cursor-pointer" id="inp-cash" max="100000" min="5000" oninput="document.getElementById('txt-cash-val').innerText = parseInt(this.value).toLocaleString() + ' AZN'; runLiveSimulation()" step="1000" type="range" value="25000"/>
+</div>
+</div>
+</div>
+<!-- STEP 2: Parallel Decisions Configurator -->
+<div class="glass-card p-5 rounded-2xl relative">
+<div class="flex items-center justify-between mb-3">
+<h3 class="text-sm font-bold text-adaptive-head flex items-center gap-2">
+<span class="w-5 h-5 rounded-md bg-violet-500/20 text-violet-600 dark:text-violet-400 flex items-center justify-center text-xs font-mono font-bold">2</span>
+<span data-i18n="step2_title">Paralel Qərar Parametrləri</span>
+</h3>
+<span class="text-[11px] text-violet-600 dark:text-violet-400 bg-violet-500/10 px-2 py-0.5 rounded font-mono" data-i18n="step2_badge">Dəyişənlər</span>
+</div>
+<div class="space-y-4">
+<!-- Universe 1: Price Policy -->
+<div class="p-3.5 rounded-xl bg-slate-100 dark:bg-slate-900/70 border border-blue-500/30 space-y-2">
+<div class="flex items-center justify-between text-xs">
+<span class="font-bold text-blue-600 dark:text-blue-400 flex items-center gap-1.5">
+<i class="w-3.5 h-3.5" data-lucide="tag"></i> <span data-i18n="u1_title">Kainat 1: Qiymət Siyasəti</span>
+</span>
+<span class="font-mono font-bold text-blue-600 dark:text-blue-300 bg-cyan-100 dark:bg-cyan-950 px-2 py-0.5 rounded border border-cyan-300 dark:border-cyan-800" id="txt-price-pct">+12% Artım</span>
+</div>
+<p class="text-[11px] text-adaptive-muted" data-i18n="u1_desc">“Qiyməti artırsam nə olar?” Qiymət elastikliyi və müştəri itkisi hesablanır.</p>
+<input class="w-full accent-cyan-500 h-1.5 bg-slate-300 dark:bg-slate-800 rounded-lg cursor-pointer" id="inp-price-pct" max="40" min="-20" oninput="updatePriceSlider(this.value)" step="1" type="range" value="12"/>
+<div class="flex justify-between text-[10px] text-adaptive-muted font-mono">
+<span data-i18n="u1_slider_left">-20% Endirim</span>
+<span data-i18n="u1_slider_mid">0% Sabit</span>
+<span data-i18n="u1_slider_right">+40% Artım</span>
+</div>
+</div>
+<!-- Universe 2: Second Branch Expansion -->
+<div class="p-3.5 rounded-xl bg-slate-100 dark:bg-slate-900/70 border border-violet-500/30 space-y-2">
+<div class="flex items-center justify-between text-xs">
+<span class="font-bold text-violet-600 dark:text-violet-400 flex items-center gap-1.5">
+<i class="w-3.5 h-3.5" data-lucide="building-2"></i> <span data-i18n="u2_title">Kainat 2: İkinci Filial / Ekspansiya</span>
+</span>
+<span class="font-mono font-bold text-violet-600 dark:text-violet-300 bg-violet-100 dark:bg-violet-950 px-2 py-0.5 rounded border border-violet-300 dark:border-violet-800" id="txt-branch-capex">30,000 AZN İlkin</span>
+</div>
+<p class="text-[11px] text-adaptive-muted" data-i18n="u2_desc">“İkinci filial açsam?” Təmir xərcləri, əlavə maaşlar və 6 aylıq ramp-up dövrü.</p>
+<div class="grid grid-cols-2 gap-2 text-[11px]">
+<div>
+<span class="text-adaptive-muted" data-i18n="u2_capex">İnvestisiya (CAPEX):</span>
+<input class="w-full accent-violet-500 h-1 bg-slate-300 dark:bg-slate-800 rounded cursor-pointer mt-1" id="inp-branch-capex" max="80000" min="10000" oninput="updateBranchSlider(this.value)" step="5000" type="range" value="30000"/>
+</div>
+<div>
+<span class="text-adaptive-muted" data-i18n="u2_opex">Yeni Filial İcarə+İşçi:</span>
+<input class="w-full input-field rounded px-2 py-1 font-mono text-[11px] mt-1" id="inp-branch-opex" onchange="runLiveSimulation()" step="500" type="number" value="6500"/>
+</div>
+</div>
+</div>
+<!-- Universe 3: Aggressive Marketing Campaign -->
+<div class="p-3.5 rounded-xl bg-slate-100 dark:bg-slate-900/70 border border-emerald-500/30 space-y-2">
+<div class="flex items-center justify-between text-xs">
+<span class="font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
+<i class="w-3.5 h-3.5" data-lucide="megaphone"></i> <span data-i18n="u3_title">Kainat 3: Aqressiv Reklam Kampaniyası</span>
+</span>
+<span class="font-mono font-bold text-emerald-600 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-950 px-2 py-0.5 rounded border border-emerald-300 dark:border-emerald-800" id="txt-ad-budget">2,500 AZN/ay</span>
+</div>
+<p class="text-[11px] text-adaptive-muted" data-i18n="u3_desc">“Reklama pul xərcləsəm?” CAC (Müştəri qazanma dəyəri) və LTV dinamikası.</p>
+<input class="w-full accent-emerald-500 h-1.5 bg-slate-300 dark:bg-slate-800 rounded-lg cursor-pointer" id="inp-ad-budget" max="10000" min="500" oninput="updateAdSlider(this.value)" step="500" type="range" value="2500"/>
+<div class="flex items-center justify-between text-[10px] text-adaptive-muted">
+<span>CAC: <strong class="text-adaptive-head font-mono">18 AZN</strong></span>
+<span><span data-i18n="u3_new_cust">Gözlənilən yeni müştəri</span>: <strong class="text-emerald-600 dark:text-emerald-400 font-mono" id="txt-ad-new-cust">+138 nəfər/ay</strong></span>
+</div>
+</div>
+<!-- Universe 4: Custom AI Prompt Decision -->
+<div class="p-3.5 rounded-xl bg-slate-100 dark:bg-slate-900/70 border border-amber-500/30 space-y-2">
+<div class="flex items-center justify-between text-xs">
+<span class="font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
+<i class="w-3.5 h-3.5" data-lucide="sparkles"></i> <span data-i18n="u4_title">Kainat 4: Sərbəst AI Qərar Promptu</span>
+</span>
+<span class="text-[10px] font-mono text-amber-600 dark:text-amber-400/80 bg-amber-500/10 px-1.5 py-0.5 rounded">NLP Engine</span>
+</div>
+<div class="relative">
+<input class="w-full input-field rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-amber-500" id="inp-ai-prompt" placeholder="Məs: '3 satıcı artırsam'..." type="text" value="2 yeni təcrübəli satış meneceri işə götürsəm"/>
+<button class="absolute right-1.5 top-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 px-2.5 py-1 rounded text-[11px] font-bold transition flex items-center gap-1" onclick="runLiveSimulation(true)">
+<i class="w-3 h-3" data-lucide="play"></i> <span data-i18n="btn_run_nlp">Simulyasiya</span>
+</button>
+</div>
+<div class="flex flex-wrap gap-1.5 pt-1">
+<span class="text-[10px] text-adaptive-muted" data-i18n="examples_label">Sürətli nümunələr:</span>
+<button class="text-[10px] bg-slate-200 dark:bg-slate-800 text-adaptive-sub px-2 py-0.5 rounded border border-adaptive hover:border-blue-500" onclick="setPromptExample('3 nəfər satış komandası əlavə etsəm')">+3 Sales</button>
+<button class="text-[10px] bg-slate-200 dark:bg-slate-800 text-adaptive-sub px-2 py-0.5 rounded border border-adaptive hover:border-blue-500" onclick="setPromptExample('Bütün məhsullara 15% daimi endirim aksiyası')">%15 Promo</button>
+<button class="text-[10px] bg-slate-200 dark:bg-slate-800 text-adaptive-sub px-2 py-0.5 rounded border border-adaptive hover:border-blue-500" onclick="setPromptExample('Françayzinq modelinə keçib 2 tərəfdaş tapsam')">Franchise</button>
+</div>
+</div>
+</div>
+<!-- Recalculate Trigger Button -->
+<button class="w-full mt-4 py-3 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 hover:opacity-95 text-white font-bold text-xs tracking-wide shadow-lg shadow-indigo-500/25 flex items-center justify-center gap-2 transition transform active:scale-95" onclick="runLiveSimulation(true)">
+<i class="w-4 h-4" data-lucide="refresh-cw"></i>
+<span data-i18n="btn_recalculate">Bütün Paralel Kainatları Yenidən Hesabla</span>
+</button>
+</div>
+</div>
+<!-- RIGHT COLUMN: Multi-Universe Visual Results & Comparison (7 cols) -->
+<div class="lg:col-span-7 space-y-6">
+<!-- Top Overview Winner Card -->
+<div class="glass-panel p-5 rounded-2xl border border-blue-500/40 relative overflow-hidden bg-gradient-to-r from-blue-500/5 via-transparent to-blue-500/5 dark:from-slate-900/90 dark:via-blue-950/20 dark:to-slate-900/90 shadow-xl" id="winner-banner">
+<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+<div>
+<div class="flex items-center gap-2 text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1">
+<span class="w-2 h-2 rounded-full bg-blue-600 text-white animate-ping"></span>
+<span data-i18n="winner_badge_text">AI SİMULYASİYA QALİBİ</span>
+</div>
+<h3 class="text-lg sm:text-xl font-extrabold text-adaptive-head" id="txt-winner-title">
+                Kainat 1: Qiymət Artımı (+12%)
+              </h3>
+<p class="text-xs text-adaptive-sub mt-0.5" id="txt-winner-desc">
+                12 ay ərzində ən optimal risk/mənfəət balansını təmin edir: <span class="text-emerald-500 dark:text-emerald-400 font-bold font-mono">+38,400 AZN əlavə xalis gəlir</span>.
+              </p>
+</div>
+<div class="text-right shrink-0">
+<span class="text-[10px] text-adaptive-muted block uppercase font-mono" data-i18n="lbl_total_12m_profit">12 Aylıq Cəmi Mənfəət</span>
+<span class="text-2xl font-extrabold font-mono text-emerald-600 dark:text-emerald-400" id="txt-winner-profit">82,400 ₼</span>
+</div>
+</div>
+</div>
+<!-- 12-Month Interactive Projection Chart -->
+<div class="glass-card p-5 rounded-2xl relative">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+<div>
+<h3 class="text-sm font-bold text-adaptive-head flex items-center gap-2">
+<i class="w-4 h-4 text-blue-500" data-lucide="trending-up"></i>
+<span data-i18n="chart_title">12 Aylıq Maliyyə Proqnozu Müqayisəsi</span>
+</h3>
+<p class="text-xs text-adaptive-muted" data-i18n="chart_desc">Baza vəziyyət ilə 4 alternativ qərarın dinamik müqayisəsi</p>
+</div>
+<!-- Chart Metric Toggle -->
+<div class="inline-flex rounded-lg bg-slate-200 dark:bg-slate-900 p-1 border border-adaptive text-xs">
+<button class="px-2.5 py-1 rounded-md font-semibold bg-blue-500/15 text-blue-600 dark:text-blue-300 border border-blue-500/30 transition" data-i18n="btn_monthly_profit" id="btn-chart-profit" onclick="toggleChartMetric('profit')">
+                Aylıq Xalis Mənfəət
+              </button>
+<button class="px-2.5 py-1 rounded-md font-medium text-adaptive-muted hover:text-adaptive-head transition" data-i18n="btn_cash_flow" id="btn-chart-cash" onclick="toggleChartMetric('cash')">
+                Kassa Qalığı (Cash)
+              </button>
+</div>
+</div>
+<!-- Chart Canvas Container -->
+<div class="relative h-72 w-full">
+<canvas id="parallelChart"></canvas>
+</div>
+<!-- Chart Legends -->
+<div class="mt-4 pt-3 border-t border-adaptive flex flex-wrap items-center justify-center gap-4 text-xs font-mono">
+<div class="flex items-center gap-1.5 text-slate-500">
+<span class="w-3 h-1 bg-slate-400 rounded"></span> <span data-i18n="leg_baseline">Baza (Status Quo)</span>
+</div>
+<div class="flex items-center gap-1.5 text-blue-600 dark:text-blue-400">
+<span class="w-3 h-1 bg-cyan-400 rounded"></span> <span data-i18n="leg_u1">K-1: Qiymət</span>
+</div>
+<div class="flex items-center gap-1.5 text-violet-600 dark:text-violet-400">
+<span class="w-3 h-1 bg-violet-400 rounded"></span> <span data-i18n="leg_u2">K-2: 2-ci Filial</span>
+</div>
+<div class="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
+<span class="w-3 h-1 bg-emerald-400 rounded"></span> <span data-i18n="leg_u3">K-3: Marketinq</span>
+</div>
+<div class="flex items-center gap-1.5 text-amber-600 dark:text-amber-400">
+<span class="w-3 h-1 bg-amber-400 rounded"></span> <span data-i18n="leg_u4">K-4: AI Ssenari</span>
+</div>
+</div>
+</div>
+<!-- 4 Parallel Universes Side-by-Side KPI Cards -->
+<!-- Monte Carlo & Black Swan Stress Testing Bar -->
+<div class="glass-card p-4 rounded-2xl border border-adaptive mt-4">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-adaptive">
+<div class="flex items-center gap-2">
+<div class="p-1.5 rounded-lg bg-amber-500/20 text-amber-600 dark:text-amber-400">
+<i class="w-4 h-4" data-lucide="dice-5"></i>
+</div>
+<div>
+<h4 class="text-xs font-bold text-adaptive-head" data-i18n="monte_title">Monte Carlo Simulyasiyası (1,000 İterasiya)</h4>
+<p class="text-[11px] text-adaptive-muted" data-i18n="monte_desc">Bazar volatilliyi və qeyri-müəyyənlik sınağı</p>
+</div>
+</div>
+<!-- Stress Test Action -->
+<button class="px-3 py-1.5 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-600 dark:text-rose-300 border border-rose-500/40 text-xs font-bold flex items-center gap-1.5 transition active:scale-95" id="btn-stress-test" onclick="triggerStressTest()">
+<i class="w-3.5 h-3.5" data-lucide="alert-triangle"></i>
+<span data-i18n="btn_stress_test">Bazar Böhranı Stress Testi (-20% Şok)</span>
+</button>
+</div>
+<div class="grid grid-cols-3 gap-3 pt-3 text-center text-xs font-mono">
+<div class="p-2 rounded-lg bg-slate-100 dark:bg-slate-950/70 border border-adaptive">
+<span class="text-[10px] text-adaptive-muted block" data-i18n="mc_success_rate">Uğur Ehtimalı</span>
+<span class="text-sm font-bold text-emerald-600 dark:text-emerald-400" id="mc-success-rate">94.8%</span>
+</div>
+<div class="p-2 rounded-lg bg-slate-100 dark:bg-slate-950/70 border border-adaptive">
+<span class="text-[10px] text-adaptive-muted block" data-i18n="mc_worst_case">Ən Pis Hal (P10)</span>
+<span class="text-sm font-bold text-rose-600 dark:text-rose-400" id="mc-worst-case">42,100 ₼</span>
+</div>
+<div class="p-2 rounded-lg bg-slate-100 dark:bg-slate-950/70 border border-adaptive">
+<span class="text-[10px] text-adaptive-muted block" data-i18n="mc_best_case">Optimist Hal (P90)</span>
+<span class="text-sm font-bold text-blue-600 dark:text-blue-400" id="mc-best-case">96,800 ₼</span>
+</div>
+</div>
+</div></div>
+</div>
+<!-- AI VIRTUAL BOARD OF DIRECTORS -->
+<div class="mt-8 pt-8 border-t border-adaptive"><div class="flex items-center justify-between mb-4"><div>
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+<h4 class="text-sm font-bold text-adaptive-head uppercase tracking-wider font-mono">4 Paralel Kainatın Canlı Müqayisəsi</h4>
+</div>
+<p class="text-xs text-adaptive-muted mt-0.5">Hər qərarın 12 aylıq xalis gəlir, kassa qalığı və risk fərqi</p>
+</div></div><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs" id="cards-container">
+<!-- Populated dynamically via JS -->
+</div></div><div class="glass-panel p-6 sm:p-8 rounded-3xl border border-adaptive mt-8" id="board">
+<div class="flex items-center justify-between mb-6 pb-4 border-b border-adaptive">
+<div>
+<div class="text-xs font-mono font-semibold uppercase tracking-wider text-violet-600 dark:text-violet-400 flex items-center gap-2 mb-1">
+<i class="w-4 h-4" data-lucide="bot"></i> <span data-i18n="board_tag">Virtual İdarə Heyəti</span>
+</div>
+<h3 class="text-xl sm:text-2xl font-extrabold text-adaptive-head" data-i18n="board_title">AI Direktorlar Şurasının Ekspert Təhlili</h3>
+</div>
+<button class="hidden sm:inline-flex items-center gap-2 text-xs font-semibold px-3.5 py-2 rounded-lg bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-adaptive-head border border-adaptive transition" onclick="printExecutiveReport()">
+<i class="w-3.5 h-3.5" data-lucide="printer"></i> <span data-i18n="btn_print_pdf">Hesabatı Çap Et / PDF</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- CFO Persona -->
+<div class="glass-card p-5 rounded-2xl border border-blue-500/20 relative">
+<div class="flex items-center gap-3 mb-3">
+<div class="w-9 h-9 rounded-xl bg-blue-500/15 text-blue-500 flex items-center justify-center font-bold text-sm">
+              💼
+            </div>
+<div>
+<h4 class="text-sm font-bold text-adaptive-head" data-i18n="cfo_name">CFO AI (Maliyyə Direktoru)</h4>
+<span class="text-[10px] text-blue-600 dark:text-blue-400 font-mono" data-i18n="cfo_role">Likvidlik və Nağd Pul Təhlükəsizliyi</span>
+</div>
+</div>
+<p class="text-xs text-adaptive-sub leading-relaxed" data-i18n="cfo_text" id="txt-cfo-advice">
+            Qiymət artımı kassa likvidliyini ən sürətli artıran ssenaridir. İkinci filial üçün isə kassanızın minimum 35,000 AZN olması vacibdir, əks halda 4-cü ayda nağd pul çatışmazlığı riski yaranır.
+          </p>
+<div class="mt-3 pt-3 border-t border-adaptive text-[11px] text-blue-600 dark:text-blue-400 font-mono flex items-center gap-1.5">
+<i class="w-3 h-3" data-lucide="check-circle-2"></i> <span data-i18n="cfo_verdict">Tövsiyə: Qiymət artımı + Kassa yığımı</span>
+</div>
+</div>
+<!-- CMO Persona -->
+<div class="glass-card p-5 rounded-2xl border border-emerald-500/20 relative">
+<div class="flex items-center gap-3 mb-3">
+<div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-500 flex items-center justify-center font-bold text-sm">
+              📈
+            </div>
+<div>
+<h4 class="text-sm font-bold text-adaptive-head" data-i18n="cmo_name">CMO AI (Böyümə Direktoru)</h4>
+<span class="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono" data-i18n="cmo_role">CAC, LTV və Müştəri Loyallığı</span>
+</div>
+</div>
+<p class="text-xs text-adaptive-sub leading-relaxed" data-i18n="cmo_text" id="txt-cmo-advice">
+            Qiyməti 12% qaldırarkən müştərilərin təxminən 3.8%-i itirilə bilər. Bu itkini kompensasiya etmək üçün aylıq 1,500 AZN hədəfli reklamla yüksək çekli müştərilər cəlb edilməlidir.
+          </p>
+<div class="mt-3 pt-3 border-t border-adaptive text-[11px] text-emerald-600 dark:text-emerald-400 font-mono flex items-center gap-1.5">
+<i class="w-3 h-3" data-lucide="check-circle-2"></i> <span data-i18n="cmo_verdict">LTV/CAC nisbəti: 3.4x (Sağlam)</span>
+</div>
+</div>
+<!-- CRO Persona -->
+<div class="glass-card p-5 rounded-2xl border border-rose-500/20 relative">
+<div class="flex items-center gap-3 mb-3">
+<div class="w-9 h-9 rounded-xl bg-rose-500/20 text-rose-500 flex items-center justify-center font-bold text-sm">
+              🛡️
+            </div>
+<div>
+<h4 class="text-sm font-bold text-adaptive-head" data-i18n="cro_name">CRO AI (Risk Direktoru)</h4>
+<span class="text-[10px] text-rose-600 dark:text-rose-400 font-mono" data-i18n="cro_role">Bazar Tənəzzülü və Böhran Riskləri</span>
+</div>
+</div>
+<p class="text-xs text-adaptive-sub leading-relaxed" data-i18n="cro_text" id="txt-cro-advice">
+            Əgər rəqiblər qiymət müharibəsinə başlasa və ya tədarük zənciri bahalaşsa, 2-ci filial ən çox zərbə alacaq ssenaridir. Ən davamlı model isə marjanı artıran Qiymət Siyasətidir.
+          </p>
+<div class="mt-3 pt-3 border-t border-adaptive text-[11px] text-rose-600 dark:text-rose-400 font-mono flex items-center gap-1.5">
+<i class="w-3 h-3" data-lucide="alert-octagon"></i> <span data-i18n="cro_verdict">İflas Riski: &lt; 2.5% (Təhlükəsiz zona)</span>
+</div>
+</div>
+</div>
+<!-- Action Plan Checklist -->
+<div class="mt-6 p-4 rounded-2xl bg-gradient-to-r from-slate-100 to-indigo-50 dark:from-slate-900 dark:to-indigo-950/40 border border-indigo-500/30">
+<h4 class="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-300 font-mono mb-2 flex items-center gap-2">
+<i class="w-4 h-4" data-lucide="list-ordered"></i> <span data-i18n="action_plan_title">AI Hərəkət Planı (Addım-addım tövsiyə):</span>
+</h4>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-adaptive-sub">
+<div class="flex items-start gap-2">
+<span class="w-5 h-5 rounded-full bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-mono font-bold text-[10px] shrink-0 mt-0.5">1</span>
+<span data-i18n="action_step_1">Qiyməti bütün çeşidlərdə deyil, yalnız ən çox satılan A-kateqoriyalı məhsullarda 10% artırın.</span>
+</div>
+<div class="flex items-start gap-2">
+<span class="w-5 h-5 rounded-full bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-mono font-bold text-[10px] shrink-0 mt-0.5">2</span>
+<span data-i18n="action_step_2">Marketinq büdcəsini hər həftəlik 400 AZN sınaqla başladın və CAC göstəricisini izləyin.</span>
+</div>
+<div class="flex items-start gap-2">
+<span class="w-5 h-5 rounded-full bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-mono font-bold text-[10px] shrink-0 mt-0.5">3</span>
+<span data-i18n="action_step_3">Kassa qalığı 40,000 AZN-ə çatdıqda 2-ci filial üçün icarə müqaviləsi bağlayın.</span>
+</div>
+</div>
+</div>
+</div></section>
+<!-- HOW IT WORKS SECTION -->
+<section class="relative z-10 py-16 px-4 lg:px-8 max-w-7xl mx-auto border-t border-adaptive" id="how-it-works">
+<div class="text-center max-w-2xl mx-auto mb-12">
+<div class="text-xs font-mono font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400 mb-1" data-i18n="how_badge">
+        Kvant Simulyasiya Metodologiyası
+      </div>
+<h2 class="text-3xl font-extrabold text-adaptive-head" data-i18n="how_title">Parallel Business Necə İşləyir?</h2>
+<p class="text-sm text-adaptive-muted mt-2" data-i18n="how_desc">Daxil etdiyiniz hər bir qərar təsadüfi proqnoz deyil, riyazi və iqtisadi modellərlə təsdiqlənir.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<div class="glass-card p-6 rounded-2xl relative">
+<div class="w-10 h-10 rounded-xl bg-blue-500/15 text-blue-500 flex items-center justify-center mb-4">
+<i class="w-5 h-5" data-lucide="database"></i>
+</div>
+<span class="text-xs font-mono text-blue-600 dark:text-blue-400" data-i18n="how_s1_step">Addım 1</span>
+<h4 class="text-base font-bold text-adaptive-head mt-1 mb-2" data-i18n="how_s1_title">Baza Parametrləri</h4>
+<p class="text-xs text-adaptive-muted leading-relaxed" data-i18n="how_s1_desc">
+          Biznesinizin cari dövriyyəsi, icarə, əməkhaqqı, marja və müştəri sayı sistemə daxil edilir.
+        </p>
+</div>
+<div class="glass-card p-6 rounded-2xl relative">
+<div class="w-10 h-10 rounded-xl bg-violet-500/20 text-violet-500 flex items-center justify-center mb-4">
+<i class="w-5 h-5" data-lucide="git-branch"></i>
+</div>
+<span class="text-xs font-mono text-violet-600 dark:text-violet-400" data-i18n="how_s2_step">Addım 2</span>
+<h4 class="text-base font-bold text-adaptive-head mt-1 mb-2" data-i18n="how_s2_title">Paralel Budaqlanma</h4>
+<p class="text-xs text-adaptive-muted leading-relaxed" data-i18n="how_s2_desc">
+          Qiymət dəyişikliyi, ekspansiya və marketinq qərarları üçün fərqli riyazi kainatlar açılır.
+        </p>
+</div>
+<div class="glass-card p-6 rounded-2xl relative">
+<div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-500 flex items-center justify-center mb-4">
+<i class="w-5 h-5" data-lucide="activity"></i>
+</div>
+<span class="text-xs font-mono text-amber-600 dark:text-amber-400" data-i18n="how_s3_step">Addım 3</span>
+<h4 class="text-base font-bold text-adaptive-head mt-1 mb-2" data-i18n="how_s3_title">Monte Carlo &amp; Stress Test</h4>
+<p class="text-xs text-adaptive-muted leading-relaxed" data-i18n="how_s3_desc">
+          1,000 təsadüfi bazar şoku və böhran simulyasiyası ilə iflas və qazanc ehtimalları sınaqdan keçirilir.
+        </p>
+</div>
+<div class="glass-card p-6 rounded-2xl relative">
+<div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center mb-4">
+<i class="w-5 h-5" data-lucide="award"></i>
+</div>
+<span class="text-xs font-mono text-emerald-600 dark:text-emerald-400" data-i18n="how_s4_step">Addım 4</span>
+<h4 class="text-base font-bold text-adaptive-head mt-1 mb-2" data-i18n="how_s4_title">İcra Qərarı</h4>
+<p class="text-xs text-adaptive-muted leading-relaxed" data-i18n="how_s4_desc">
+          Virtual İdarə Heyəti ən gəlirli və ən təhlükəsiz qərarı seçir, addım-addım icra yolunu təqdim edir.
+        </p>
+</div>
+</div>
+</section>
+<!-- PRICING & MONETIZATION SECTION -->
+<section class="relative z-10 py-16 px-4 lg:px-8 max-w-7xl mx-auto border-t border-adaptive" id="pricing">
+<div class="text-center max-w-2xl mx-auto mb-12">
+<div class="text-xs font-mono font-semibold uppercase tracking-wider text-amber-600 dark:text-amber-400 mb-1" data-i18n="pricing_badge">
+        Sahibkarlar Üçün Şəffaf Abunə
+      </div>
+<h2 class="text-3xl font-extrabold text-adaptive-head" data-i18n="pricing_title">Səhvlərinizin Dəyəri Abunədən Qat-qat Bahadır</h2>
+<p class="text-sm text-adaptive-muted mt-2" data-i18n="pricing_desc">Yanlış filial açılışında 40,000 AZN itirmək yerinə, ayda bir kofe qiymətinə qərarlarınızı sığortalayın.</p>
+<!-- Billing Period Toggle -->
+<div class="mt-6 inline-flex items-center gap-3 p-1 rounded-full bg-slate-200 dark:bg-slate-900 border border-adaptive text-xs">
+<button class="px-4 py-1.5 rounded-full font-bold bg-blue-500/15 text-blue-600 dark:text-blue-300 border border-blue-500/30 transition" data-i18n="billing_monthly" id="btn-bill-monthly" onclick="setBillingPeriod('monthly')">
+          Aylıq Ödəniş
+        </button>
+<button class="px-4 py-1.5 rounded-full font-medium text-adaptive-muted hover:text-adaptive-head transition flex items-center gap-1.5" id="btn-bill-annual" onclick="setBillingPeriod('annual')">
+<span data-i18n="billing_annual">İllik Ödəniş</span> <span class="text-[10px] bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-1.5 py-0.5 rounded font-mono font-bold">-20%</span>
+</button>
+</div>
+</div>
+<!-- Pricing Cards Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+<!-- Tier 1: Starter -->
+<div class="glass-card p-6 sm:p-8 rounded-3xl flex flex-col justify-between border border-adaptive">
+<div>
+<span class="text-xs font-mono text-adaptive-muted font-bold uppercase tracking-wider" data-i18n="plan_starter_sub">Başlanğıc</span>
+<h3 class="text-xl font-bold text-adaptive-head mt-1">Starter</h3>
+<p class="text-xs text-adaptive-muted mt-1" data-i18n="plan_starter_desc">Tək mağaza və ya kiçik kafe sahibləri üçün.</p>
+<div class="my-6">
+<div class="flex items-baseline gap-1">
+<span class="text-4xl font-extrabold text-adaptive-head font-mono" id="price-starter">39 ₼</span>
+<span class="text-xs text-adaptive-muted" data-i18n="per_month">/ ay</span>
+</div>
+<span class="text-[11px] text-slate-500" data-i18n="cancel_anytime">İstənilən vaxt ləğv edilə bilər</span>
+</div>
+<ul class="space-y-3 text-xs text-adaptive-sub border-t border-adaptive pt-6">
+<li class="flex items-center gap-2">
+<i class="w-4 h-4 text-blue-500 shrink-0" data-lucide="check"></i>
+<span data-i18n="starter_f1">Ayda 15 canlı simulyasiya</span>
+</li>
+<li class="flex items-center gap-2">
+<i class="w-4 h-4 text-blue-500 shrink-0" data-lucide="check"></i>
+<span data-i18n="starter_f2">3 paralel ssenari müqayisəsi</span>
+</li>
+<li class="flex items-center gap-2">
+<i class="w-4 h-4 text-blue-500 shrink-0" data-lucide="check"></i>
+<span data-i18n="starter_f3">6 aylıq proqnoz dövrü</span>
+</li>
+<li class="flex items-center gap-2">
+<i class="w-4 h-4 text-blue-500 shrink-0" data-lucide="check"></i>
+<span data-i18n="starter_f4">Əsas qiymət elastikliyi modeli</span>
+</li>
+<li class="flex items-center gap-2 text-slate-400 dark:text-slate-500">
+<i class="w-4 h-4 shrink-0" data-lucide="x"></i>
+<span data-i18n="starter_f5">Monte Carlo simulyasiyası</span>
+</li>
+</ul>
+</div>
+<button class="w-full mt-8 py-3 rounded-xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-adaptive-head font-bold text-xs transition border border-adaptive" data-i18n="btn_start_starter" onclick="openCheckoutModal('Starter', 39)">
+          Starter ilə Başla
+        </button>
+</div>
+<!-- Tier 2: Pro (POPULAR) -->
+<div class="glass-card p-6 sm:p-8 rounded-3xl flex flex-col justify-between border-2 border-blue-500/50 shadow-2xl shadow-blue-500/15 relative bg-gradient-to-b bg-white dark:bg-slate-900 border-2 border-blue-500/60 shadow-xl shadow-blue-500/10">
+<div class="absolute -top-3.5 left-1/2 transform -translate-x-1/2 px-3 py-1 rounded-full bg-gradient-to-r from-cyan-400 to-indigo-500 text-slate-950 font-bold text-[10px] tracking-wider uppercase shadow-md" data-i18n="badge_most_popular">
+          Ən Çox Seçilən
+        </div>
+<div>
+<span class="text-xs font-mono text-blue-600 dark:text-blue-400 font-bold uppercase tracking-wider" data-i18n="plan_pro_sub">Böyüyən Şirkətlər</span>
+<h3 class="text-xl font-bold text-adaptive-head mt-1">Growth Pro</h3>
+<p class="text-xs text-adaptive-muted mt-1" data-i18n="plan_pro_desc">Filial açan və aqressiv böyümək istəyən sahibkarlar.</p>
+<div class="my-6">
+<div class="flex items-baseline gap-1">
+<span class="text-4xl font-extrabold text-adaptive-head font-mono" id="price-pro">89 ₼</span>
+<span class="text-xs text-adaptive-muted" data-i18n="per_month">/ ay</span>
+</div>
+<span class="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium" data-i18n="pro_trial_text">14 günlük pulsuz sınaq daxildir</span>
+</div>
+<ul class="space-y-3 text-xs text-adaptive-sub border-t border-adaptive pt-6">
+<li class="flex items-center gap-2">
+<i class="w-4 h-4 text-blue-500 shrink-0" data-lucide="check"></i>
+<span class="font-semibold text-adaptive-head" data-i18n="pro_f1">Limitsiz paralel simulyasiyalar</span>
+</li>
+<li class="flex items-center gap-2">
+<i class="w-4 h-4 text-blue-500 shrink-0" data-lucide="check"></i>
+<span data-i18n="pro_f2">24 aylıq dərin maliyyə proqnozu</span>
+</li>
+<li class="flex items-center gap-2">
+<i class="w-4 h-4 text-blue-500 shrink-0" data-lucide="check"></i>
+<span data-i18n="pro_f3">5,000 dövr Monte Carlo risk analizi</span>
+</li>
+<li class="flex items-center gap-2">
+<i class="w-4 h-4 text-blue-500 shrink-0" data-lucide="check"></i>
+<span class="text-violet-600 dark:text-violet-300" data-i18n="pro_f4">AI Direktorlar Şurası (CFO, CMO, CRO)</span>
+</li>
+<li class="flex items-center gap-2">
+<i class="w-4 h-4 text-blue-500 shrink-0" data-lucide="check"></i>
+<span data-i18n="pro_f5">Sərbəst NLP AI Qərar Promptları</span>
+</li>
+<li class="flex items-center gap-2">
+<i class="w-4 h-4 text-blue-500 shrink-0" data-lucide="check"></i>
+<span data-i18n="pro_f6">Direktorlar Şurası PDF hesabat ixracı</span>
+</li>
+</ul>
+</div>
+<button class="w-full mt-8 py-3.5 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 text-white hover:opacity-95 text-slate-950 font-bold text-xs tracking-wide shadow-lg shadow-blue-500/20 transition transform active:scale-95" data-i18n="btn_try_free" onclick="openCheckoutModal('Growth Pro', 89)">
+          14 Gün Pulsuz Sına →
+        </button>
+</div>
+<!-- Tier 3: Enterprise -->
+<div class="glass-card p-6 sm:p-8 rounded-3xl flex flex-col justify-between border border-adaptive">
+<div>
+<span class="text-xs font-mono text-purple-600 dark:text-purple-400 font-bold uppercase tracking-wider" data-i18n="plan_ent_sub">Şəbəkələr &amp; Holdinqlər</span>
+<h3 class="text-xl font-bold text-adaptive-head mt-1">Enterprise</h3>
+<p class="text-xs text-adaptive-muted mt-1" data-i18n="plan_ent_desc">Çoxfiliallı şəbəkələr və investisiya fondları üçün.</p>
+<div class="my-6">
+<div class="flex items-baseline gap-1">
+<span class="text-4xl font-extrabold text-adaptive-head font-mono" id="price-enterprise">249 ₼</span>
+<span class="text-xs text-adaptive-muted" data-i18n="per_month">/ ay</span>
+</div>
+<span class="text-[11px] text-slate-500" data-i18n="ent_sync_text">Məlumatlarınızı real vaxtda sinxronlaşdırın</span>
+</div>
+<ul class="space-y-3 text-xs text-adaptive-sub border-t border-adaptive pt-6">
+<li class="flex items-center gap-2">
+<i class="w-4 h-4 text-blue-500 shrink-0" data-lucide="check"></i>
+<span data-i18n="ent_f1">Pro planının bütün imkanları</span>
+</li>
+<li class="flex items-center gap-2">
+<i class="w-4 h-4 text-blue-500 shrink-0" data-lucide="check"></i>
+<span class="font-semibold text-adaptive-head" data-i18n="ent_f2">1C, QuickBooks &amp; Bank API inteqrasiyası</span>
+</li>
+<li class="flex items-center gap-2">
+<i class="w-4 h-4 text-blue-500 shrink-0" data-lucide="check"></i>
+<span data-i18n="ent_f3">10 nəfərlik komanda girişi</span>
+</li>
+<li class="flex items-center gap-2">
+<i class="w-4 h-4 text-blue-500 shrink-0" data-lucide="check"></i>
+<span data-i18n="ent_f4">Fərdi Şəxsi AI Modeli (Dedicated Fine-tune)</span>
+</li>
+<li class="flex items-center gap-2">
+<i class="w-4 h-4 text-blue-500 shrink-0" data-lucide="check"></i>
+<span data-i18n="ent_f5">24/7 Şəxsi Maliyyə Analitiki dəstəyi</span>
+</li>
+</ul>
+</div>
+<button class="w-full mt-8 py-3 rounded-xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-adaptive-head font-bold text-xs transition border border-adaptive" data-i18n="btn_contact_sales" onclick="openCheckoutModal('Enterprise', 249)">
+          Satış Şöbəsi ilə Əlaqə
+        </button>
+</div>
+</div>
+</section>
+<!-- FOOTER -->
+<footer class="relative z-10 py-12 px-4 lg:px-8 border-t border-adaptive text-xs transition-colors">
+<div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-2">
+<i class="w-4 h-4 text-blue-500" data-lucide="git-fork"></i>
+<span class="font-bold text-adaptive-head">Parallel Business AI</span>
+<span data-i18n="footer_slogan">— Biznes Qərarlarının Alternativ Gələcək Simulyatoru</span>
+</div>
+<div data-i18n="footer_rights">
+        © 2026 Parallel Business Inc. Bütün hüquqlar qorunur.
+      </div>
+</div>
+</footer>
+<!-- CHECKOUT / SUBSCRIPTION MODAL -->
+<div class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4" id="checkout-modal">
+<div class="glass-card max-w-md w-full p-6 rounded-3xl border border-blue-500/40 relative bg-white dark:bg-slate-900 shadow-2xl">
+<button class="absolute top-4 right-4 text-slate-400 hover:text-adaptive-head" onclick="closeCheckoutModal()">
+<i class="w-5 h-5" data-lucide="x"></i>
+</button>
+<div class="text-center mb-5">
+<div class="w-12 h-12 rounded-2xl bg-blue-500/15 text-blue-500 flex items-center justify-center mx-auto mb-2">
+<i class="w-6 h-6" data-lucide="sparkles"></i>
+</div>
+<h3 class="text-lg font-bold text-adaptive-head" data-i18n="modal_checkout_title">Abunəliyi Təsdiqləyin</h3>
+<p class="text-xs text-adaptive-muted mt-1">
+<span data-i18n="modal_plan_lbl">Plan:</span> <span class="text-blue-500 font-bold" id="modal-plan-name">Growth Pro</span> (<span class="font-mono font-bold text-adaptive-head" id="modal-plan-price">89 AZN / ay</span>)
+        </p>
+</div>
+<form class="space-y-3.5 text-xs" onsubmit="handleCheckoutSubmit(event)">
+<div>
+<label class="block text-adaptive-muted mb-1" data-i18n="modal_company_name">Şirkət və ya Sahibkar Adı</label>
+<input class="w-full input-field rounded-lg px-3 py-2" placeholder="Məs: Baku Retail MMC" required="" type="text"/>
+</div>
+<div>
+<label class="block text-adaptive-muted mb-1" data-i18n="modal_email">Email Ünvanı</label>
+<input class="w-full input-field rounded-lg px-3 py-2" placeholder="ceo@company.az" required="" type="email"/>
+</div>
+<div>
+<label class="block text-adaptive-muted mb-1" data-i18n="modal_card_info">Kart Məlumatları (Demo Təhlükəsiz Ödəniş)</label>
+<div class="relative">
+<input class="w-full input-field rounded-lg px-3 py-2 font-mono" placeholder="4169 •••• •••• 9821" type="text" value="4169 8832 9102 4410"/>
+<span class="absolute right-3 top-2 text-[10px] text-emerald-500 font-bold">SSL 256-bit</span>
+</div>
+</div>
+<div class="p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-[11px] text-emerald-600 dark:text-emerald-300 flex items-center gap-2">
+<i class="w-4 h-4 shrink-0" data-lucide="shield-check"></i>
+<span data-i18n="modal_trial_notice">İlk 14 gün tamamilə pulsuzdur. İstənilən an bir kliklə ləğv edə bilərsiniz.</span>
+</div>
+<button class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-400 to-indigo-500 text-slate-950 font-bold text-xs shadow-lg shadow-blue-500/20 transition hover:opacity-95 mt-2" data-i18n="modal_btn_submit" type="submit">
+          Abunə Ol &amp; Simulyatoru Aktivləşdir →
+        </button>
+</form>
+</div>
+</div>
+<!-- AUTH MODAL -->
+<div class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4" id="auth-modal">
+<div class="glass-card max-w-sm w-full p-6 rounded-3xl border border-adaptive relative bg-white dark:bg-slate-900 shadow-2xl">
+<button class="absolute top-4 right-4 text-slate-400 hover:text-adaptive-head" onclick="closeAuthModal()">
+<i class="w-5 h-5" data-lucide="x"></i>
+</button>
+<div class="text-center mb-5">
+<h3 class="text-lg font-bold text-adaptive-head" data-i18n="modal_auth_title">Hesaba Giriş</h3>
+<p class="text-xs text-adaptive-muted mt-1" data-i18n="modal_auth_desc">Simulyasiya edilmiş ssenarilərinizi yadda saxlayın</p>
+</div>
+<div class="space-y-3 text-xs">
+<input class="w-full input-field rounded-lg px-3 py-2" placeholder="Email" type="email"/>
+<input class="w-full input-field rounded-lg px-3 py-2" placeholder="Password" type="password"/>
+<button class="w-full py-2.5 rounded-lg bg-blue-600 text-white hover:bg-cyan-400 text-slate-950 font-bold text-xs transition" data-i18n="btn_login" onclick="closeAuthModal(); confetti({ particleCount: 50 });">
+          Daxil Ol
+        </button>
+</div>
+</div>
+</div>
+<!-- I18N DICTIONARY & LOGIC -->
+<script>
+    const i18nData = {
+      az: {
+        announcement_badge: "YENİ",
+        announcement_text: "Süni İntellektlə Qərar Simulyatoru 2.4 — Sahibkarlar üçün 14 günlük limitsiz demo aktivdir!",
+        announcement_link: "İndi Sınaqdan Keçir &rarr;",
+        brand_subtitle: "Alternativ Gələcək Mühərriki",
+        nav_simulator: "Simulyator",
+        nav_board: "AI İdarə Heyəti",
+        nav_pricing: "Abunə Planları",
+        nav_how_it_works: "Necə İşləyir?",
+        btn_login: "Daxil Ol",
+        btn_launch_sim: "Simulyasiya Başla",
+        hero_badge: "Biznes Qərarlarının Kvant Əkizi (Digital Twin Simulator)",
+        hero_title_1: "Real qərar verməzdən əvvəl,",
+        hero_title_2: "4 alternativ gələcəyinizi",
+        hero_title_3: "simulyasiya edin.",
+        hero_desc: "“Qiyməti 10% artırsam nə olar?”, “İkinci filial açsam?”, “Reklama 3,000 AZN xərcləsəm?” Süni İntellekt real vaxtda minlərlə dəyişəni hesablayır və bahalı səhvlərdən qoruyur.",
+        stat_zero_risk: "Sıfır Risklə Qərar",
+        stat_monte_carlo: "1,000 Monte Carlo İterasiyası",
+        stat_speed: "3 Saniyədə Nəticə",
+        stat_ai_board: "AI Direktorlar Şurası Rəyi",
+        btn_hero_simulate: "Öz Biznesinizi Simulyasiya Edin",
+        btn_hero_pricing: "Abunə Planlarına Bax",
+        ticker_badge: "CANLI SİMULYASİYA",
+        ticker_content: "Kafe/Restoran: Qiymət +12% qaldırıldıqda müştərilərin 3.4%-i itirilir, lakin aylıq xalis mənfəət +4,200 AZN artır!",
+        sim_header_tag: "İnteraktiv Qərar Laboratoriyası",
+        sim_header_title: "Paralel Kainat Simulyatoru",
+        sector_template_label: "Sektor Şablonu:",
+        sector_cafe: "Kafe/Restoran",
+        sector_retail: "Pərakəndə",
+        sector_saas: "B2B SaaS",
+        sector_ecommerce: "E-ticarət",
+        sector_services: "Xidmət",
+        step1_title: "Mövcud Biznes Göstəriciləriniz",
+        step1_badge: "Baza Metrikləri",
+        lbl_revenue: "Aylıq Dövriyyə (AZN)",
+        lbl_fixed_costs: "Sabit Xərclər (İcarə+Maaş)",
+        lbl_var_costs: "Dəyişən Xərc Marjası (%)",
+        lbl_customers: "Aylıq Müştəri Sayı",
+        unit_people: "nəfər",
+        lbl_cash_reserve: "Mövcud Kassa Ehtiyatı (Cash Buffer):",
+        step2_title: "Paralel Qərar Parametrləri",
+        step2_badge: "Dəyişənlər",
+        u1_title: "Kainat 1: Qiymət Siyasəti",
+        u1_desc: "“Qiyməti artırsam nə olar?” Qiymət elastikliyi və müştəri itkisi hesablanır.",
+        u1_slider_left: "-20% Endirim",
+        u1_slider_mid: "0% Sabit",
+        u1_slider_right: "+40% Artım",
+        u2_title: "Kainat 2: İkinci Filial / Ekspansiya",
+        u2_desc: "“İkinci filial açsam?” Təmir xərcləri, əlavə maaşlar və 6 aylıq ramp-up dövrü.",
+        u2_capex: "İnvestisiya (CAPEX):",
+        u2_opex: "Yeni Filial İcarə+İşçi:",
+        u3_title: "Kainat 3: Aqressiv Reklam Kampaniyası",
+        u3_desc: "“Reklama pul xərcləsəm?” CAC (Müştəri qazanma dəyəri) və LTV dinamikası.",
+        u3_new_cust: "Gözlənilən yeni müştəri",
+        u4_title: "Kainat 4: Sərbəst AI Qərar Promptu",
+        btn_run_nlp: "Simulyasiya",
+        examples_label: "Sürətli nümunələr:",
+        btn_recalculate: "Bütün Paralel Kainatları Yenidən Hesabla",
+        winner_badge_text: "AI SİMULYASİYA QALİBİ",
+        lbl_total_12m_profit: "12 Aylıq Cəmi Mənfəət",
+        chart_title: "12 Aylıq Maliyyə Proqnozu Müqayisəsi",
+        chart_desc: "Baza vəziyyət ilə 4 alternativ qərarın dinamik müqayisəsi",
+        btn_monthly_profit: "Aylıq Xalis Mənfəət",
+        btn_cash_flow: "Kassa Qalığı (Cash)",
+        leg_baseline: "Baza (Status Quo)",
+        leg_u1: "K-1: Qiymət",
+        leg_u2: "K-2: 2-ci Filial",
+        leg_u3: "K-3: Marketinq",
+        leg_u4: "K-4: AI Ssenari",
+        monte_title: "Monte Carlo Simulyasiyası (1,000 İterasiya)",
+        monte_desc: "Bazar volatilliyi və qeyri-müəyyənlik sınağı",
+        btn_stress_test: "Bazar Böhranı Stress Testi (-20% Şok)",
+        mc_success_rate: "Uğur Ehtimalı",
+        mc_worst_case: "Ən Pis Hal (P10)",
+        mc_best_case: "Optimist Hal (P90)",
+        board_tag: "Virtual İdarə Heyəti",
+        board_title: "AI Direktorlar Şurasının Ekspert Təhlili",
+        btn_print_pdf: "Hesabatı Çap Et / PDF",
+        cfo_name: "CFO AI (Maliyyə Direktoru)",
+        cfo_role: "Likvidlik və Nağd Pul Təhlükəsizliyi",
+        cfo_text: "Qiymət artımı kassa likvidliyini ən sürətli artıran ssenaridir. İkinci filial üçün isə kassanızın minimum 35,000 AZN olması vacibdir, əks halda 4-cü ayda nağd pul çatışmazlığı riski yaranır.",
+        cfo_verdict: "Tövsiyə: Qiymət artımı + Kassa yığımı",
+        cmo_name: "CMO AI (Böyümə Direktoru)",
+        cmo_role: "CAC, LTV və Müştəri Loyallığı",
+        cmo_text: "Qiyməti 12% qaldırarkən müştərilərin təxminən 3.8%-i itirilə bilər. Bu itkini kompensasiya etmək üçün aylıq 1,500 AZN hədəfli reklamla yüksək çekli müştərilər cəlb edilməlidir.",
+        cmo_verdict: "LTV/CAC nisbəti: 3.4x (Sağlam)",
+        cro_name: "CRO AI (Risk Direktoru)",
+        cro_role: "Bazar Tənəzzülü və Böhran Riskləri",
+        cro_text: "Əgər rəqiblər qiymət müharibəsinə başlasa və ya tədarük zənciri bahalaşsa, 2-ci filial ən çox zərbə alacaq ssenaridir. Ən davamlı model isə marjanı artıran Qiymət Siyasətidir.",
+        cro_verdict: "İflas Riski: < 2.5% (Təhlükəsiz zona)",
+        action_plan_title: "AI Hərəkət Planı (Addım-addım tövsiyə):",
+        action_step_1: "Qiyməti bütün çeşidlərdə deyil, yalnız ən çox satılan A-kateqoriyalı məhsullarda 10% artırın.",
+        action_step_2: "Marketinq büdcəsini hər həftəlik 400 AZN sınaqla başladın və CAC göstəricisini izləyin.",
+        action_step_3: "Kassa qalığı 40,000 AZN-ə çatdıqda 2-ci filial üçün icarə müqaviləsi bağlayın.",
+        how_badge: "Kvant Simulyasiya Metodologiyası",
+        how_title: "Parallel Business Necə İşləyir?",
+        how_desc: "Daxil etdiyiniz hər bir qərar təsadüfi proqnoz deyil, riyazi və iqtisadi modellərlə təsdiqlənir.",
+        how_s1_step: "Addım 1",
+        how_s1_title: "Baza Parametrləri",
+        how_s1_desc: "Biznesinizin cari dövriyyəsi, icarə, əməkhaqqı, marja və müştəri sayı sistemə daxil edilir.",
+        how_s2_step: "Addım 2",
+        how_s2_title: "Paralel Budaqlanma",
+        how_s2_desc: "Qiymət dəyişikliyi, ekspansiya və marketinq qərarları üçün fərqli riyazi kainatlar açılır.",
+        how_s3_step: "Addım 3",
+        how_s3_title: "Monte Carlo & Stress Test",
+        how_s3_desc: "1,000 təsadüfi bazar şoku və böhran simulyasiyası ilə iflas və qazanc ehtimalları sınaqdan keçirilir.",
+        how_s4_step: "Addım 4",
+        how_s4_title: "İcra Qərarı",
+        how_s4_desc: "Virtual İdarə Heyəti ən gəlirli və ən təhlükəsiz qərarı seçir, addım-addım icra yolunu təqdim edir.",
+        pricing_badge: "Sahibkarlar Üçün Şəffaf Abunə",
+        pricing_title: "Səhvlərinizin Dəyəri Abunədən Qat-qat Bahadır",
+        pricing_desc: "Yanlış filial açılışında 40,000 AZN itirmək yerinə, ayda bir kofe qiymətinə qərarlarınızı sığortalayın.",
+        billing_monthly: "Aylıq Ödəniş",
+        billing_annual: "İllik Ödəniş",
+        plan_starter_sub: "Başlanğıc",
+        plan_starter_desc: "Tək mağaza və ya kiçik kafe sahibləri üçün.",
+        per_month: "/ ay",
+        cancel_anytime: "İstənilən vaxt ləğv edilə bilər",
+        starter_f1: "Ayda 15 canlı simulyasiya",
+        starter_f2: "3 paralel ssenari müqayisəsi",
+        starter_f3: "6 aylıq proqnoz dövrü",
+        starter_f4: "Əsas qiymət elastikliyi modeli",
+        starter_f5: "Monte Carlo simulyasiyası",
+        btn_start_starter: "Starter ilə Başla",
+        badge_most_popular: "Ən Çox Seçilən",
+        plan_pro_sub: "Böyüyən Şirkətlər",
+        plan_pro_desc: "Filial açan və aqressiv böyümək istəyən sahibkarlar.",
+        pro_trial_text: "14 günlük pulsuz sınaq daxildir",
+        pro_f1: "Limitsiz paralel simulyasiyalar",
+        pro_f2: "24 aylıq dərin maliyyə proqnozu",
+        pro_f3: "5,000 dövr Monte Carlo risk analizi",
+        pro_f4: "AI Direktorlar Şurası (CFO, CMO, CRO)",
+        pro_f5: "Sərbəst NLP AI Qərar Promptları",
+        pro_f6: "Direktorlar Şurası PDF hesabat ixracı",
+        btn_try_free: "14 Gün Pulsuz Sına &rarr;",
+        plan_ent_sub: "Şəbəkələr & Holdinqlər",
+        plan_ent_desc: "Çoxfiliallı şəbəkələr və investisiya fondları üçün.",
+        ent_sync_text: "Məlumatlarınızı real vaxtda sinxronlaşdırın",
+        ent_f1: "Pro planının bütün imkanları",
+        ent_f2: "1C, QuickBooks & Bank API inteqrasiyası",
+        ent_f3: "10 nəfərlik komanda girişi",
+        ent_f4: "Fərdi Şəxsi AI Modeli (Dedicated Fine-tune)",
+        ent_f5: "24/7 Şəxsi Maliyyə Analitiki dəstəyi",
+        btn_contact_sales: "Satış Şöbəsi ilə Əlaqə",
+        reviews_title: "Sahibkarlar Nə Deyir?",
+        reviews_desc: "Real qərarlarını Parallel Business ilə simulyasiya edən biznes liderləri",
+        rev_1_text: "“İkinci restoran filialını açmaq istəyirdik, lakin simulyatorda gördük ki, kassa ehtiyatımız 5-ci ayda sıfıra enəcək. Açılışı 3 ay ertələyib kassanı gücləndirdik və indi hər iki filial tam gəlirlə işləyir!”",
+        rev_1_role: "Coffee & Bakery Şəbəkəsi Sahibi",
+        rev_2_text: "“Qiymətləri qaldırmaqdan qorxurduq ki, müştərilər qaçacaq. AI simulyasiya etdi ki, 10% artım cəmi 3% müştəri itkisi verəcək, amma xalis mənfəətimiz 28% artacaq. Tam dediyi kimi oldu!”",
+        rev_2_role: "E-Commerce & Geyim Brendi Təsisçisi",
+        rev_3_text: "“Virtual İdarə Heyəti funksiyası heyrətamizdir. CFO və Risk Direktorunun təhlili sayəsində reklama havayı 5,000 AZN tökməkdən imtina etdik və satış komandamızı gücləndirdik.”",
+        rev_3_role: "B2B Logistika Şirkəti Direktoru",
+        footer_slogan: "— Biznes Qərarlarının Alternativ Gələcək Simulyatoru",
+        footer_rights: "© 2026 Parallel Business Inc. Bütün hüquqlar qorunur.",
+        modal_checkout_title: "Abunəliyi Təsdiqləyin",
+        modal_plan_lbl: "Plan:",
+        modal_company_name: "Şirkət və ya Sahibkar Adı",
+        modal_email: "Email Ünvanı",
+        modal_card_info: "Kart Məlumatları (Demo Təhlükəsiz Ödəniş)",
+        modal_trial_notice: "İlk 14 gün tamamilə pulsuzdur. İstənilən an bir kliklə ləğv edə bilərsiniz.",
+        modal_btn_submit: "Abunə Ol & Simulyatoru Aktivləşdir &rarr;",
+        modal_auth_title: "Hesaba Giriş",
+        modal_auth_desc: "Simulyasiya edilmiş ssenarilərinizi yadda saxlayın",
+        month_label: "-ci ay",
+        winner_delta_text: "Baza vəziyyətə nisbətən <strong class='text-emerald-500 dark:text-emerald-400 font-mono'>+{val} AZN əlavə xalis qazanc</strong> təmin edir.",
+        stress_test_alert: "STRESS TEST NƏTİCƏSİ:\nBazarda 20% eniş baş verdikdə:\n- 2-ci Filial dərhal kassa böhranına düşür (Mənfi likvidlik).\n- Qiymət Artımı və Qənaət modeli biznesi mənfəətdə saxlayan yeganə ssenaridir!"
+      },
+
+      en: {
+        announcement_badge: "NEW",
+        announcement_text: "AI Decision Simulator 2.4 — 14-day unlimited free demo for business founders is live!",
+        announcement_link: "Try Simulator Now &rarr;",
+        brand_subtitle: "Alternative Future Simulation Engine",
+        nav_simulator: "Simulator",
+        nav_board: "AI Board",
+        nav_pricing: "Pricing & Plans",
+        nav_how_it_works: "How It Works",
+        btn_login: "Sign In",
+        btn_launch_sim: "Launch Simulator",
+        hero_badge: "Quantum Digital Twin for Strategic Business Decisions",
+        hero_title_1: "Before making a real decision,",
+        hero_title_2: "simulate 4 alternative futures",
+        hero_title_3: "in real time.",
+        hero_desc: "“What if I raise prices by 10%?”, “What if I open a second location?”, “What if I spend $3,000 on ads?” AI computes thousands of market variables to protect you from costly mistakes.",
+        stat_zero_risk: "Zero-Risk Decisions",
+        stat_monte_carlo: "1,000 Monte Carlo Iterations",
+        stat_speed: "Results in 3 Seconds",
+        stat_ai_board: "AI Executive Board Verdict",
+        btn_hero_simulate: "Simulate Your Business Now",
+        btn_hero_pricing: "View Subscription Plans",
+        ticker_badge: "LIVE SIMULATION",
+        ticker_content: "Cafe/Restaurant: A +12% price hike causes only 3.4% customer churn, but surges net profit by +$4,200/mo!",
+        sim_header_tag: "Interactive Decision Sandbox",
+        sim_header_title: "Parallel Universe Simulator",
+        sector_template_label: "Industry Preset:",
+        sector_cafe: "Cafe/Restaurant",
+        sector_retail: "Retail Store",
+        sector_saas: "B2B SaaS",
+        sector_ecommerce: "E-Commerce",
+        sector_services: "Professional Services",
+        step1_title: "Your Baseline Financial Metrics",
+        step1_badge: "Base Metrics",
+        lbl_revenue: "Monthly Revenue ($ / AZN)",
+        lbl_fixed_costs: "Fixed Costs (Rent + Payroll)",
+        lbl_var_costs: "Variable Cost Margin (%)",
+        lbl_customers: "Monthly Active Customers",
+        unit_people: "clients",
+        lbl_cash_reserve: "Current Cash Buffer Reserve:",
+        step2_title: "Parallel Decision Parameters",
+        step2_badge: "Variables",
+        u1_title: "Universe 1: Pricing Policy",
+        u1_desc: "“What if I raise prices?” Computes price elasticity of demand and churn vs margin expansion.",
+        u1_slider_left: "-20% Discount",
+        u1_slider_mid: "0% Static",
+        u1_slider_right: "+40% Increase",
+        u2_title: "Universe 2: Second Location / Expansion",
+        u2_desc: "“What if I expand?” Upfront CAPEX, additional rent & payroll, and 6-month ramp-up curve.",
+        u2_capex: "Capex Investment:",
+        u2_opex: "New Location Monthly OPEX:",
+        u3_title: "Universe 3: Aggressive Marketing Campaign",
+        u3_desc: "“What if I spend on ads?” CAC (Acquisition Cost), LTV dynamics, and customer compound growth.",
+        u3_new_cust: "Expected New Clients",
+        u4_title: "Universe 4: Custom AI NLP Decision Prompt",
+        btn_run_nlp: "Simulate",
+        examples_label: "Quick Examples:",
+        btn_recalculate: "Recalculate All Parallel Universes",
+        winner_badge_text: "AI SIMULATION WINNER",
+        lbl_total_12m_profit: "12-Month Total Profit",
+        chart_title: "12-Month Financial Trajectory Comparison",
+        chart_desc: "Comparing baseline status-quo against 4 alternative decision paths",
+        btn_monthly_profit: "Monthly Net Profit",
+        btn_cash_flow: "Cash Flow Runway",
+        leg_baseline: "Baseline (Status Quo)",
+        leg_u1: "U-1: Pricing",
+        leg_u2: "U-2: 2nd Branch",
+        leg_u3: "U-3: Marketing",
+        leg_u4: "U-4: AI Scenario",
+        monte_title: "Monte Carlo Simulation (1,000 Iterations)",
+        monte_desc: "Stress testing market volatility & uncertainty distributions",
+        btn_stress_test: "Crisis Stress Test (-20% Market Shock)",
+        mc_success_rate: "Success Probability",
+        mc_worst_case: "Worst Case (P10)",
+        mc_best_case: "Optimistic Case (P90)",
+        board_tag: "Virtual Board of Directors",
+        board_title: "AI Executive Advisory & Multi-Agent Critique",
+        btn_print_pdf: "Print Brief / PDF",
+        cfo_name: "CFO AI (Chief Financial Officer)",
+        cfo_role: "Liquidity & Runway Protection",
+        cfo_text: "Price optimization expands cash reserves quickest without leverage. For a second branch, maintain at least $35k in reserve to avoid a cash crisis in Month 4.",
+        cfo_verdict: "Verdict: Increase price + Build cash reserve",
+        cmo_name: "CMO AI (Chief Marketing Officer)",
+        cmo_role: "CAC, LTV & Retention Health",
+        cmo_text: "Raising price by 12% risks losing ~3.8% of low-margin shoppers. Reinvest $1,500/mo into targeted ads to attract high-ticket, higher-retention clients.",
+        cmo_verdict: "LTV/CAC Ratio: 3.4x (Healthy)",
+        cro_name: "CRO AI (Chief Risk Officer)",
+        cro_role: "Recession & Crisis Resilience",
+        cro_text: "If competitors start a price war or supply chain costs spike, opening a branch is the most fragile move. Price optimization offers the strongest shock absorber.",
+        cro_verdict: "Default Risk: < 2.5% (Safe Zone)",
+        action_plan_title: "AI Executive Action Blueprint (Step-by-Step):",
+        action_step_1: "1. Increase prices by 10% exclusively on top-selling A-tier items to test elasticity safely.",
+        action_step_2: "2. Deploy marketing spend in weekly $400 sprints while monitoring CAC closely.",
+        action_step_3: "3. Sign lease for 2nd branch only once cash reserves surpass $40,000.",
+        how_badge: "Simulation Methodology",
+        how_title: "How Parallel Business Works",
+        how_desc: "Every projection is mathematically grounded in microeconomic formulas and empirical stochastic models.",
+        how_s1_step: "Step 1",
+        how_s1_title: "Input Baseline Data",
+        how_s1_desc: "Your current revenue, fixed overhead, margin, and customer volume are loaded into memory.",
+        how_s2_step: "Step 2",
+        how_s2_title: "Quantum Branching",
+        how_s2_desc: "Separate mathematical universes branch out for pricing, expansion, and marketing vectors.",
+        how_s3_step: "Step 3",
+        how_s3_title: "Monte Carlo & Stress Test",
+        how_s3_desc: "1,000 market shock iterations evaluate insolvency risks and confidence intervals.",
+        how_s4_step: "Step 4",
+        how_s4_title: "Executive Verdict",
+        how_s4_desc: "The Virtual Board delivers actionable critiques and an optimal step-by-step roadmap.",
+        pricing_badge: "Transparent B2B Subscription",
+        pricing_title: "The Cost of One Mistake Dwarfs a Subscription",
+        pricing_desc: "Instead of losing $40,000 on a botched location, insure every strategic decision for less than a cup of coffee a day.",
+        billing_monthly: "Monthly Billing",
+        billing_annual: "Annual Billing",
+        plan_starter_sub: "Starter Plan",
+        plan_starter_desc: "Ideal for single-store retailers, coffee shops & boutique agencies.",
+        per_month: "/ mo",
+        cancel_anytime: "Cancel anytime without penalty",
+        starter_f1: "15 live simulations per month",
+        starter_f2: "3 parallel universe comparisons",
+        starter_f3: "6-month financial horizon",
+        starter_f4: "Baseline price elasticity model",
+        starter_f5: "Monte Carlo simulation",
+        btn_start_starter: "Get Started with Starter",
+        badge_most_popular: "MOST POPULAR",
+        plan_pro_sub: "Scaling Businesses",
+        plan_pro_desc: "For ambitious entrepreneurs expanding locations or scaling budgets.",
+        pro_trial_text: "Includes 14-day free trial",
+        pro_f1: "Unlimited parallel simulations",
+        pro_f2: "24-month deep financial horizon",
+        pro_f3: "5,000-run Monte Carlo risk audit",
+        pro_f4: "AI Virtual Board (CFO, CMO, CRO)",
+        pro_f5: "Custom NLP decision prompts",
+        pro_f6: "Board-ready PDF executive export",
+        btn_try_free: "Start 14-Day Free Trial &rarr;",
+        plan_ent_sub: "Chains & Holdings",
+        plan_ent_desc: "Multi-branch retail networks and investment private equity firms.",
+        ent_sync_text: "Sync real-time data from ERP & banks",
+        ent_f1: "All features in Growth Pro",
+        ent_f2: "1C, QuickBooks & Bank API sync",
+        ent_f3: "10 team member seats",
+        ent_f4: "Custom fine-tuned financial model",
+        ent_f5: "24/7 dedicated financial analyst",
+        btn_contact_sales: "Contact Enterprise Sales",
+        reviews_title: "What Business Leaders Say",
+        reviews_desc: "Real founders who simulated before spending real capital",
+        rev_1_text: "“We planned to open our second restaurant, but the simulator showed our cash would dip below zero in month 5. We paused for 3 months, built our buffer, and both branches are thriving today!”",
+        rev_1_role: "Owner, Coffee & Bakery Chain",
+        rev_2_text: "“We feared raising prices would kill demand. The AI simulated that a 10% hike would lose only 3% of users while driving +28% net profit. It played out exactly as predicted!”",
+        rev_2_role: "Founder, E-Commerce Apparel",
+        rev_3_text: "“The Virtual Board feature is mindblowing. CFO and CRO insights saved us from wasting $5,000/mo on unfocused ads, and we redirected funds into high-converting sales reps.”",
+        rev_3_role: "Managing Director, B2B Logistics",
+        footer_slogan: "— Alternative Future Simulation Platform for Strategic Decisions",
+        footer_rights: "© 2026 Parallel Business Inc. All rights reserved.",
+        modal_checkout_title: "Confirm Your Subscription",
+        modal_plan_lbl: "Selected Plan:",
+        modal_company_name: "Company or Founder Name",
+        modal_email: "Work Email Address",
+        modal_card_info: "Card Details (Demo Secure Sandbox)",
+        modal_trial_notice: "First 14 days are 100% free. Cancel anytime in one click.",
+        modal_btn_submit: "Subscribe & Activate Simulator &rarr;",
+        modal_auth_title: "Account Login",
+        modal_auth_desc: "Access your saved business simulation scenarios",
+        month_label: "Mo ",
+        winner_delta_text: "Delivers <strong class='text-emerald-500 dark:text-emerald-400 font-mono'>+{val} AZN additional net profit</strong> compared to baseline status-quo.",
+        stress_test_alert: "STRESS TEST FINDINGS:\nUnder a sudden -20% market recession:\n- Branch expansion immediately triggers a liquidity freeze.\n- Price optimization + cash conservation is the sole model remaining comfortably profitable!"
+      },
+
+      ru: {
+        announcement_badge: "НОВОЕ",
+        announcement_text: "AI Симулятор Бизнес-Решений 2.4 — 14 дней бесплатного безлимитного доступа для предпринимателей!",
+        announcement_link: "Попробовать Симулятор &rarr;",
+        brand_subtitle: "Движок Альтернативного Будущего",
+        nav_simulator: "Симулятор",
+        nav_board: "AI Совет Директоров",
+        nav_pricing: "Тарифы и Подписка",
+        nav_how_it_works: "Как Это Работает",
+        btn_login: "Войти",
+        btn_launch_sim: "Запустить Симулятор",
+        hero_badge: "Квантовый Цифровой Двойник для Бизнес-Решений",
+        hero_title_1: "Прежде чем рисковать деньгами,",
+        hero_title_2: "смоделируйте 4 сценария будущего",
+        hero_title_3: "в реальном времени.",
+        hero_desc: "«Что если поднять цены на 10%?», «Открыть второй филиал?», «Вложить 3,000 ₼ в рекламу?» Искусственный интеллект просчитывает тысячи факторов и защищает от дорогих ошибок.",
+        stat_zero_risk: "Решения Без Риска",
+        stat_monte_carlo: "1,000 Итераций Монте-Карло",
+        stat_speed: "Результат за 3 Секунды",
+        stat_ai_board: "Вердикт AI Совета Директоров",
+        btn_hero_simulate: "Смоделировать Свой Бизнес",
+        btn_hero_pricing: "Смотреть Тарифы",
+        ticker_badge: "ЖИВАЯ СИМУЛЯЦИЯ",
+        ticker_content: "Кафе/Ресторан: Повышение цен на 12% снижает поток клиентов всего на 3.4%, но увеличивает чистую прибыль на +4,200 AZN/мес!",
+        sim_header_tag: "Интерактивная Лаборатория Решений",
+        sim_header_title: "Симулятор Параллельных Вселенных",
+        sector_template_label: "Шаблон Сектора:",
+        sector_cafe: "Кафе/Ресторан",
+        sector_retail: "Ритейл",
+        sector_saas: "B2B SaaS",
+        sector_ecommerce: "Эл. Коммерция",
+        sector_services: "Услуги",
+        step1_title: "Текущие Финансовые Показатели",
+        step1_badge: "Базовые Метрики",
+        lbl_revenue: "Месячный Оборот (AZN / ₽)",
+        lbl_fixed_costs: "Постоянные Расходы (Аренда+ЗП)",
+        lbl_var_costs: "Маржа Переменных Расходов (%)",
+        lbl_customers: "Число Клиентов в Месяц",
+        unit_people: "чел.",
+        lbl_cash_reserve: "Текущий Запас Денег (Касса):",
+        step2_title: "Параметры Параллельных Решений",
+        step2_badge: "Переменные",
+        u1_title: "Вселенная 1: Ценовая Политика",
+        u1_desc: "«Что если повысить цены?» Расчет ценовой эластичности спроса и расширения маржи.",
+        u1_slider_left: "-20% Скидка",
+        u1_slider_mid: "0% Без изменений",
+        u1_slider_right: "+40% Рост",
+        u2_title: "Вселенная 2: Второй Филиал / Экспансия",
+        u2_desc: "«Что если открыть филиал?» Капитальные затраты (CAPEX), аренда, зарплаты и 6 месяцев разгона.",
+        u2_capex: "Инвестиции (CAPEX):",
+        u2_opex: "Расходы Нового Филиала (OPEX):",
+        u3_title: "Вселенная 3: Агрессивный Маркетинг",
+        u3_desc: "«Что если вложить в рекламу?» CAC (стоимость привлечения), LTV и приток клиентской базы.",
+        u3_new_cust: "Ожидаемый приток клиентов",
+        u4_title: "Вселенная 4: Произвольный AI Промпт",
+        btn_run_nlp: "Симуляция",
+        examples_label: "Быстрые примеры:",
+        btn_recalculate: "Пересчитать Все Параллельные Вселенные",
+        winner_badge_text: "ПОБЕДИТЕЛЬ AI СИМУЛЯЦИИ",
+        lbl_total_12m_profit: "Итоговая Прибыль за 12 Месяцев",
+        chart_title: "Сравнение Финансовых Траекторий на 12 Месяцев",
+        chart_desc: "Динамическое сопоставление статус-кво и 4 альтернативных решений",
+        btn_monthly_profit: "Чистая Прибыль в Месяц",
+        btn_cash_flow: "Остаток в Кассе (Cash Flow)",
+        leg_baseline: "База (Статус-кво)",
+        leg_u1: "В-1: Цены",
+        leg_u2: "В-2: 2-й Филиал",
+        leg_u3: "В-3: Маркетинг",
+        leg_u4: "В-4: AI Сценарий",
+        monte_title: "Симуляция Монте-Карло (1,000 Итераций)",
+        monte_desc: "Стресс-тестирование рыночной волатильности и неопределенности",
+        btn_stress_test: "Стресс-Тест «Кризисный Сценарий» (-20% Шок)",
+        mc_success_rate: "Вероятность Успеха",
+        mc_worst_case: "Худший Исход (P10)",
+        mc_best_case: "Оптимистичный Исход (P90)",
+        board_tag: "Виртуальный Совет Директоров",
+        board_title: "Экспертный Анализ AI Совета Директоров",
+        btn_print_pdf: "Печать Отчета / PDF",
+        cfo_name: "CFO AI (Финансовый Директор)",
+        cfo_role: "Ликвидность и Защита Кассы",
+        cfo_text: "Оптимизация цен быстрее всего наполняет кассу без привлечения долгов. Для открытия филиала держите подушку не менее 35,000 AZN, иначе к 4-му месяцу грозит кассовый разрыв.",
+        cfo_verdict: "Вердикт: Рост цен + Накопление резерва",
+        cmo_name: "CMO AI (Директор по Росту)",
+        cmo_role: "CAC, LTV и Удержание Клиентов",
+        cmo_text: "При повышении цен на 12% отсеется до 3.8% чувствительных клиентов. Направьте 1,500 AZN в таргетированную рекламу для привлечения премиального сегмента.",
+        cmo_verdict: "Соотношение LTV/CAC: 3.4x (Отлично)",
+        cro_name: "CRO AI (Директор по Рискам)",
+        cro_role: "Рыночный Спад и Антикризисная Устойчивость",
+        cro_text: "В случае рецессии или роста закупочных цен филиал понесет наибольший ущерб. Наиболее надежный щит — оптимизация маржи через ценообразование.",
+        cro_verdict: "Риск Банкротства: < 2.5% (Безопасно)",
+        action_plan_title: "План Действий AI (Пошаговое Руководство):",
+        action_step_1: "1. Поднимите цены на 10% только на хиты категории А, чтобы протестировать эластичность.",
+        action_step_2: "2. Тестируйте рекламный бюджет недельными спринтами по 400 AZN, контролируя CAC.",
+        action_step_3: "3. Заключайте договор аренды второго филиала только при остатке в кассе от 40,000 AZN.",
+        how_badge: "Методология Квантового Моделирования",
+        how_title: "Как Работает Parallel Business?",
+        how_desc: "Каждый прогноз строится не на догадках, а на математических и микроэкономических формулах.",
+        how_s1_step: "Шаг 1",
+        how_s1_title: "Ввод Базовых Данных",
+        how_s1_desc: "Текущий оборот, аренда, зарплатный фонд, маржинальность и поток клиентов вводятся в систему.",
+        how_s2_step: "Шаг 2",
+        how_s2_title: "Ветвление Вселенных",
+        how_s2_desc: "Для цен, филиалов и маркетинга строятся независимые математические пространства.",
+        how_s3_step: "Шаг 3",
+        how_s3_title: "Монте-Карло и Стресс-Тест",
+        how_s3_desc: "1,000 случайных рыночных шоков проверяют вероятность банкротства и интервалы доходности.",
+        how_s4_step: "Шаг 4",
+        how_s4_title: "Управленческое Решение",
+        how_s4_desc: "Виртуальный Совет Директоров выбирает лучший путь и формирует пошаговый план внедрения.",
+        pricing_badge: "Прозрачная Подписка для Бизнеса",
+        pricing_title: "Цена Одной Ошибки в Разы Дороже Подписки",
+        pricing_desc: "Вместо потери 40,000 AZN на неудачном филиале, застрахуйте стратегические решения по цене чашки кофе в день.",
+        billing_monthly: "Оплата Помесячно",
+        billing_annual: "Оплата за Год",
+        plan_starter_sub: "Стартовый План",
+        plan_starter_desc: "Для единичных магазинов, небольших кофеен и бутиков.",
+        per_month: "/ мес",
+        cancel_anytime: "Отмена в любой момент в 1 клик",
+        starter_f1: "15 симуляций в месяц",
+        starter_f2: "3 параллельных сценария",
+        starter_f3: "Горизонт прогноза 6 месяцев",
+        starter_f4: "Базовая модель эластичности цен",
+        starter_f5: "Симуляция Монте-Карло",
+        btn_start_starter: "Начать со Стартового",
+        badge_most_popular: "САМЫЙ ПОПУЛЯРНЫЙ",
+        plan_pro_sub: "Растущий Бизнес",
+        plan_pro_desc: "Для предпринимателей, открывающих филиалы и масштабирующих трафик.",
+        pro_trial_text: "Включает 14 дней бесплатного теста",
+        pro_f1: "Безлимитные параллельные симуляции",
+        pro_f2: "Глубокий прогноз на 24 месяца",
+        pro_f3: "Аудит рисков Монте-Карло (5,000 циклов)",
+        pro_f4: "AI Совет Директоров (CFO, CMO, CRO)",
+        pro_f5: "Произвольные NLP AI промпты",
+        pro_f6: "Экспорт отчета для совета директоров в PDF",
+        btn_try_free: "Попробовать 14 Дней Бесплатно &rarr;",
+        plan_ent_sub: "Сети и Холдинги",
+        plan_ent_desc: "Для розничных сетей, франшиз и инвестиционных фондов.",
+        ent_sync_text: "Синхронизация с ERP, 1C и банками",
+        ent_f1: "Все возможности тарифа Pro",
+        ent_f2: "Интеграция по API с 1С, QuickBooks и банками",
+        ent_f3: "Доступ для 10 участников команды",
+        ent_f4: "Персональная дообученная AI модель",
+        ent_f5: "Выделенный финансовый аналитик 24/7",
+        btn_contact_sales: "Связаться с Отделом Продаж",
+        reviews_title: "Отзывы Предпринимателей",
+        reviews_desc: "Руководители, которые смоделировали будущее до реальных затрат",
+        rev_1_text: "«Мы собирались открывать второй ресторан, но симулятор показал кассовый разрыв на 5-й месяц. Мы отложили открытие на 3 месяца, укрепили подушку — и сейчас оба заведения прибыльны!»",
+        rev_1_role: "Владелец сети Coffee & Bakery",
+        rev_2_text: "«Боялись поднимать цены из-за оттока клиентов. AI рассчитал, что рост на 10% сократит трафик всего на 3%, но увеличит чистую прибыль на 28%. Все сошлось с точностью до цифры!»",
+        rev_2_role: "Основательница E-Commerce бренда",
+        rev_3_text: "«Совет Директоров на базе AI — это шедевр. Заключения CFO и CRO спасли нас от слива 5,000 AZN в неэффективную рекламу, направив средства в сильный отдел продаж.»",
+        rev_3_role: "Генеральный директор B2B логистики",
+        footer_slogan: "— Платформа Моделирования Альтернативного Будущего Бизнеса",
+        footer_rights: "© 2026 Parallel Business Inc. Все права защищены.",
+        modal_checkout_title: "Подтверждение Подписки",
+        modal_plan_lbl: "Выбранный Тариф:",
+        modal_company_name: "Название Компании или Имя",
+        modal_email: "Рабочий Email",
+        modal_card_info: "Данные Карты (Демо Песочница)",
+        modal_trial_notice: "Первые 14 дней бесплатны. Отмена в 1 клик в любое время.",
+        modal_btn_submit: "Оформить Подписку и Активировать &rarr;",
+        modal_auth_title: "Вход в Аккаунт",
+        modal_auth_desc: "Сохраняйте свои симуляции и историю решений",
+        month_label: "Mo ",
+        winner_delta_text: "Обеспечивает <strong class='text-emerald-500 dark:text-emerald-400 font-mono'>+{val} AZN дополнительной чистой прибыли</strong> относительно статус-кво.",
+        stress_test_alert: "РЕЗУЛЬТАТ СТРЕСС-ТЕСТА:\nПри внезапном падении рынка на -20%:\n- Филиал мгновенно уходит в дефицит ликвидности (отрицательная касса).\n- Модель оптимизации цен остается единственной, приносящей стабильную прибыль!"
+      }
+    };
+
+    // State Variables
+    let currentLang = localStorage.getItem('parallel_lang') || 'az';
+    let currentTheme = localStorage.getItem('parallel_theme') || 'dark';
+    let currentIndustry = 'cafe';
+    let billingAnnual = false;
+    let chartMetric = 'profit'; // 'profit' or 'cash'
+    let parallelChart = null;
+
+    // Theme Management (Dark & Bright)
+    function applyTheme(theme) {
+      currentTheme = theme;
+      localStorage.setItem('parallel_theme', theme);
+      const htmlEl = document.documentElement;
+      const themeIcon = document.getElementById('theme-icon');
+
+      if (theme === 'dark') {
+        htmlEl.classList.add('dark');
+        if (themeIcon) {
+          themeIcon.setAttribute('data-lucide', 'sun');
+          themeIcon.className = 'w-4 h-4 text-amber-400';
+        }
+      } else {
+        htmlEl.classList.remove('dark');
+        if (themeIcon) {
+          themeIcon.setAttribute('data-lucide', 'moon');
+          themeIcon.className = 'w-4 h-4 text-slate-700';
+        }
+      }
+      lucide.createIcons();
+      if (parallelChart) {
+        runLiveSimulation(false);
+      }
+    }
+
+    function toggleTheme() {
+      applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+    }
+
+    // Language Management (AZ, EN, RU)
+    function setLanguage(lang) {
+      if (!i18nData[lang]) lang = 'az';
+      currentLang = lang;
+      localStorage.setItem('parallel_lang', lang);
+
+      // Update button highlights
+      ['az', 'en', 'ru'].forEach(l => {
+        const btn = document.getElementById('lang-btn-' + l);
+        if (btn) {
+          if (l === lang) {
+            btn.className = 'px-2 py-1 rounded-lg transition-all text-blue-600 dark:text-blue-300 bg-white dark:bg-slate-800 shadow-sm';
+          } else {
+            btn.className = 'px-2 py-1 rounded-lg transition-all text-slate-600 dark:text-slate-400 hover:text-blue-500';
+          }
+        }
+      });
+
+      // Update static text elements with data-i18n
+      const dict = i18nData[lang];
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key]) {
+          el.innerHTML = dict[key];
+        }
+      });
+
+      // Update dynamic slider text & run simulation
+      const priceVal = document.getElementById('inp-price-pct').value;
+      updatePriceSlider(priceVal);
+      runLiveSimulation(false);
+    }
+
+    // Industry Presets
+    const industryPresets = {
+      cafe: {
+        rev: 28000,
+        fixed: 11000,
+        varPct: 38,
+        cust: 1100,
+        cash: 25000,
+        elasticity: -1.35,
+        priceDefault: 12,
+        branchCapex: 30000,
+        branchOpex: 6500,
+        adBudget: 2200,
+        cac: 16
+      },
+      retail: {
+        rev: 45000,
+        fixed: 14000,
+        varPct: 52,
+        cust: 1800,
+        cash: 35000,
+        elasticity: -1.55,
+        priceDefault: 10,
+        branchCapex: 45000,
+        branchOpex: 9000,
+        adBudget: 3500,
+        cac: 22
+      },
+      saas: {
+        rev: 32000,
+        fixed: 16000,
+        varPct: 15,
+        cust: 420,
+        cash: 50000,
+        elasticity: -0.75,
+        priceDefault: 15,
+        branchCapex: 20000,
+        branchOpex: 5000,
+        adBudget: 4000,
+        cac: 85
+      },
+      ecommerce: {
+        rev: 50000,
+        fixed: 12000,
+        varPct: 60,
+        cust: 2500,
+        cash: 30000,
+        elasticity: -1.8,
+        priceDefault: 8,
+        branchCapex: 25000,
+        branchOpex: 7000,
+        adBudget: 4500,
+        cac: 14
+      },
+      services: {
+        rev: 35000,
+        fixed: 13000,
+        varPct: 25,
+        cust: 150,
+        cash: 28000,
+        elasticity: -1.1,
+        priceDefault: 15,
+        branchCapex: 35000,
+        branchOpex: 8000,
+        adBudget: 2500,
+        cac: 45
+      }
+    };
+
+    function setIndustry(ind) {
+      currentIndustry = ind;
+      document.querySelectorAll('.ind-btn').forEach(b => {
+        b.className = 'ind-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-200 dark:bg-slate-800 text-adaptive-sub border border-adaptive hover:bg-slate-300 dark:hover:bg-slate-700 transition flex items-center gap-1.5';
+      });
+      const activeBtn = document.getElementById('btn-ind-' + ind);
+      if (activeBtn) {
+        activeBtn.className = 'ind-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-500/15 text-blue-600 dark:text-blue-300 border border-blue-500/40 hover:bg-blue-500/20 transition flex items-center gap-1.5';
+      }
+
+      const p = industryPresets[ind];
+      document.getElementById('inp-revenue').value = p.rev;
+      document.getElementById('inp-fixed-cost').value = p.fixed;
+      document.getElementById('inp-var-cost').value = p.varPct;
+      document.getElementById('inp-customers').value = p.cust;
+      document.getElementById('inp-cash').value = p.cash;
+      document.getElementById('txt-cash-val').innerText = p.cash.toLocaleString() + ' AZN';
+
+      document.getElementById('inp-price-pct').value = p.priceDefault;
+      updatePriceSlider(p.priceDefault);
+
+      document.getElementById('inp-branch-capex').value = p.branchCapex;
+      document.getElementById('inp-branch-opex').value = p.branchOpex;
+      updateBranchSlider(p.branchCapex);
+
+      document.getElementById('inp-ad-budget').value = p.adBudget;
+      updateAdSlider(p.adBudget);
+
+      runLiveSimulation(false);
+    }
+
+    function updatePriceSlider(val) {
+      const el = document.getElementById('txt-price-pct');
+      const num = parseInt(val);
+      const sign = num > 0 ? '+' : '';
+      let suffix = '';
+      if (currentLang === 'en') {
+        suffix = num > 0 ? 'Increase' : (num < 0 ? 'Discount' : 'Static');
+      } else if (currentLang === 'ru') {
+        suffix = num > 0 ? 'Рост' : (num < 0 ? 'Скидка' : 'Без изменений');
+      } else {
+        suffix = num > 0 ? 'Artım' : (num < 0 ? 'Endirim' : 'Sabit');
+      }
+      el.innerText = `${sign}${num}% ${suffix}`;
+      runLiveSimulation();
+    }
+
+    function updateBranchSlider(val) {
+      document.getElementById('txt-branch-capex').innerText = parseInt(val).toLocaleString() + ' AZN';
+      runLiveSimulation();
+    }
+
+    function updateAdSlider(val) {
+      document.getElementById('txt-ad-budget').innerText = parseInt(val).toLocaleString() + (currentLang === 'en' ? ' /mo' : (currentLang === 'ru' ? ' /мес' : ' AZN/ay'));
+      const cac = industryPresets[currentIndustry].cac || 18;
+      const newCust = Math.round(val / cac);
+      const unit = currentLang === 'en' ? 'clients/mo' : (currentLang === 'ru' ? 'чел/мес' : 'nəfər/ay');
+      document.getElementById('txt-ad-new-cust').innerText = `+${newCust} ${unit}`;
+      runLiveSimulation();
+    }
+
+    function setPromptExample(text) {
+      document.getElementById('inp-ai-prompt').value = text;
+      runLiveSimulation(true);
+    }
+
+    function toggleChartMetric(m) {
+      chartMetric = m;
+      document.getElementById('btn-chart-profit').className = m === 'profit' ? 
+        'px-2.5 py-1 rounded-md font-semibold bg-blue-500/15 text-blue-600 dark:text-blue-300 border border-blue-500/30 transition' :
+        'px-2.5 py-1 rounded-md font-medium text-adaptive-muted hover:text-adaptive-head transition';
+      document.getElementById('btn-chart-cash').className = m === 'cash' ? 
+        'px-2.5 py-1 rounded-md font-semibold bg-blue-500/15 text-blue-600 dark:text-blue-300 border border-blue-500/30 transition' :
+        'px-2.5 py-1 rounded-md font-medium text-adaptive-muted hover:text-adaptive-head transition';
+      runLiveSimulation();
+    }
+
+    // MAIN SIMULATION COMPUTATION
+    function runLiveSimulation(withAnimation = false) {
+      const dict = i18nData[currentLang] || i18nData.az;
+      const rev = parseFloat(document.getElementById('inp-revenue').value) || 28000;
+      const fixed = parseFloat(document.getElementById('inp-fixed-cost').value) || 11000;
+      const varPct = (parseFloat(document.getElementById('inp-var-cost').value) || 38) / 100;
+      const cust = parseInt(document.getElementById('inp-customers').value) || 1100;
+      const cash = parseFloat(document.getElementById('inp-cash').value) || 25000;
+      const aov = rev / Math.max(1, cust);
+      const elasticity = industryPresets[currentIndustry].elasticity;
+
+      const priceDeltaPct = parseFloat(document.getElementById('inp-price-pct').value) || 12;
+      const branchCapex = parseFloat(document.getElementById('inp-branch-capex').value) || 30000;
+      const branchOpex = parseFloat(document.getElementById('inp-branch-opex').value) || 6500;
+      const adBudget = parseFloat(document.getElementById('inp-ad-budget').value) || 2500;
+      const cac = industryPresets[currentIndustry].cac || 18;
+      const customPrompt = document.getElementById('inp-ai-prompt').value;
+
+      // 12 months array
+      const months = Array.from({length: 12}, (_, i) => i + 1);
+
+      // Kainat 0: Baseline
+      let baseCash = cash;
+      const u0_profit = [];
+      const u0_cash = [];
+      for (let m = 1; m <= 12; m++) {
+        let r = rev * (1 + 0.007 * m);
+        let f = fixed * (1 + 0.004 * m);
+        let p = r - (f + r * varPct);
+        baseCash += p;
+        u0_profit.push(Math.round(p));
+        u0_cash.push(Math.round(baseCash));
+      }
+
+      // Kainat 1: Price Change
+      let u1_cash_val = cash;
+      const u1_profit = [];
+      const u1_cash = [];
+      const q_pct = elasticity * (priceDeltaPct / 100);
+      const new_cust = Math.max(20, cust * (1 + q_pct));
+      const new_aov = aov * (1 + priceDeltaPct / 100);
+      const u1_base_rev = new_cust * new_aov;
+      for (let m = 1; m <= 12; m++) {
+        let r = u1_base_rev * (1 + 0.006 * m);
+        let p = r - (fixed + r * varPct);
+        u1_cash_val += p;
+        u1_profit.push(Math.round(p));
+        u1_cash.push(Math.round(u1_cash_val));
+      }
+
+      // Kainat 2: Second Branch
+      let u2_cash_val = cash - branchCapex;
+      const u2_profit = [];
+      const u2_cash = [];
+      for (let m = 1; m <= 12; m++) {
+        let ramp = Math.min(1.0, m / 6);
+        let r = rev + (rev * 0.82 * ramp);
+        let f = fixed + (branchOpex * (m === 1 ? 0.6 : 1.0));
+        let p = r - (f + r * varPct);
+        u2_cash_val += p;
+        u2_profit.push(Math.round(p));
+        u2_cash.push(Math.round(u2_cash_val));
+      }
+
+      // Kainat 3: Aggressive Marketing
+      let u3_cash_val = cash;
+      const u3_profit = [];
+      const u3_cash = [];
+      let accum_new_cust = 0;
+      for (let m = 1; m <= 12; m++) {
+        let new_c = adBudget / cac;
+        accum_new_cust = (accum_new_cust * 0.95) + new_c;
+        let r = rev + (accum_new_cust * aov);
+        let p = r - (fixed + adBudget + r * varPct);
+        u3_cash_val += p;
+        u3_profit.push(Math.round(p));
+        u3_cash.push(Math.round(u3_cash_val));
+      }
+
+      // Kainat 4: AI Custom Prompt
+      let u4_cash_val = cash;
+      const u4_profit = [];
+      const u4_cash = [];
+      let promptBoost = 0.22;
+      let promptAddedFixed = 2500;
+      const promptLower = customPrompt.toLowerCase();
+      if (promptLower.includes('endir') || promptLower.includes('aksiya') || promptLower.includes('promo') || promptLower.includes('скид')) {
+        promptBoost = 0.14;
+        promptAddedFixed = 600;
+      } else if (promptLower.includes('fran') || promptLower.includes('xaric') || promptLower.includes('франш')) {
+        promptBoost = 0.35;
+        promptAddedFixed = 2000;
+      }
+      for (let m = 1; m <= 12; m++) {
+        let ramp = Math.min(1.0, 0.4 + (0.6 * m / 6));
+        let r = rev * (1 + promptBoost * ramp);
+        let f = fixed + promptAddedFixed;
+        let p = r - (f + r * varPct);
+        u4_cash_val += p;
+        u4_profit.push(Math.round(p));
+        u4_cash.push(Math.round(u4_cash_val));
+      }
+
+      const sumU0 = u0_profit.reduce((a, b) => a + b, 0);
+      const sumU1 = u1_profit.reduce((a, b) => a + b, 0);
+      const sumU2 = u2_profit.reduce((a, b) => a + b, 0);
+      const sumU3 = u3_profit.reduce((a, b) => a + b, 0);
+      const sumU4 = u4_profit.reduce((a, b) => a + b, 0);
+
+      // Localized Universe Names
+      let u1_label = `${dict.leg_u1} (${priceDeltaPct > 0 ? '+' : ''}${priceDeltaPct}%)`;
+      let u2_label = dict.leg_u2;
+      let u3_label = dict.leg_u3;
+      let u4_label = dict.leg_u4;
+
+      const scenarios = [
+        { id: 1, name: u1_label, profit: sumU1, cashEnd: u1_cash_val, color: '#06B6D4', risk: currentLang === 'en' ? 'Low (20%)' : (currentLang === 'ru' ? 'Низкий (20%)' : 'Aşağı (20%)') },
+        { id: 2, name: u2_label, profit: sumU2, cashEnd: u2_cash_val, color: '#8B5CF6', risk: u2_cash.some(c => c < 0) ? (currentLang === 'en' ? 'Critical Risk' : (currentLang === 'ru' ? 'Критический Риск' : 'Kritik Risk')) : (currentLang === 'en' ? 'Moderate (45%)' : (currentLang === 'ru' ? 'Средний (45%)' : 'Orta (45%)')) },
+        { id: 3, name: u3_label, profit: sumU3, cashEnd: u3_cash_val, color: '#10B981', risk: currentLang === 'en' ? 'Low-Mid (30%)' : (currentLang === 'ru' ? 'Умеренный (30%)' : 'Aşağı-Orta (30%)') },
+        { id: 4, name: u4_label, profit: sumU4, cashEnd: u4_cash_val, color: '#F59E0B', risk: currentLang === 'en' ? 'Mid (35%)' : (currentLang === 'ru' ? 'Средний (35%)' : 'Orta (35%)') }
+      ];
+
+      // Winner Selection
+      const viable = scenarios.filter(s => s.cashEnd > 0);
+      const winner = (viable.length > 0 ? viable : scenarios).reduce((prev, curr) => curr.profit > prev.profit ? curr : prev, scenarios[0]);
+
+      // Update Winner Banner
+      document.getElementById('txt-winner-title').innerText = winner.name;
+      document.getElementById('txt-winner-profit').innerText = Math.round(winner.profit).toLocaleString() + ' ₼';
+      const deltaVsBase = Math.round(winner.profit - sumU0);
+      document.getElementById('txt-winner-desc').innerHTML = dict.winner_delta_text.replace('{val}', deltaVsBase.toLocaleString());
+
+      // Update KPI Cards
+      renderKpiCards(scenarios, winner.id);
+
+      // Update Chart
+      renderChart(months, {
+        u0: chartMetric === 'profit' ? u0_profit : u0_cash,
+        u1: chartMetric === 'profit' ? u1_profit : u1_cash,
+        u2: chartMetric === 'profit' ? u2_profit : u2_cash,
+        u3: chartMetric === 'profit' ? u3_profit : u3_cash,
+        u4: chartMetric === 'profit' ? u4_profit : u4_cash,
+      }, dict);
+
+      // Update Monte Carlo
+      const p10 = Math.round(winner.profit * 0.72);
+      const p90 = Math.round(winner.profit * 1.28);
+      document.getElementById('mc-worst-case').innerText = p10.toLocaleString() + ' ₼';
+      document.getElementById('mc-best-case').innerText = p90.toLocaleString() + ' ₼';
+
+      if (withAnimation) {
+        confetti({
+          particleCount: 40,
+          spread: 60,
+          origin: { y: 0.8 }
+        });
+      }
+    }
+
+    function renderKpiCards(scenarios, winnerId) {
+      const container = document.getElementById('cards-container');
+      container.innerHTML = '';
+      const winTag = currentLang === 'en' ? 'WINNER' : (currentLang === 'ru' ? 'ЛИДЕР' : 'QALİB');
+      const cashLbl = currentLang === 'en' ? 'Cash:' : (currentLang === 'ru' ? 'Касса:' : 'Kassa:');
+      const riskLbl = currentLang === 'en' ? 'Risk:' : (currentLang === 'ru' ? 'Риск:' : 'Risk:');
+
+      scenarios.forEach(s => {
+        const isWinner = s.id === winnerId;
+        const card = document.createElement('div');
+        card.className = `p-3.5 rounded-xl glass-card relative ${isWinner ? 'border-blue-500/80 bg-blue-500/10 ring-1 ring-blue-500/30' : 'border-adaptive'}`;
+        card.innerHTML = `
+          ${isWinner ? `<span class="absolute -top-2 right-2 text-[9px] bg-blue-600 text-white text-slate-950 font-bold px-1.5 py-0.2 rounded font-mono">${winTag}</span>` : ''}
+          <div class="text-[11px] font-bold truncate mb-1" style="color: ${s.color}">${s.name}</div>
+          <div class="text-base font-extrabold font-mono text-adaptive-head">${Math.round(s.profit).toLocaleString()} ₼</div>
+          <div class="text-[10px] text-adaptive-muted mt-1 flex justify-between font-mono">
+            <span>${cashLbl}</span>
+            <span class="${s.cashEnd < 0 ? 'text-rose-500 font-bold' : 'text-adaptive-sub'}">${Math.round(s.cashEnd).toLocaleString()} ₼</span>
+          </div>
+          <div class="text-[10px] text-adaptive-muted flex justify-between font-mono">
+            <span>${riskLbl}</span>
+            <span class="${s.risk.includes('Kritik') || s.risk.includes('Critical') || s.risk.includes('Критический') ? 'text-rose-500' : 'text-emerald-500'}">${s.risk}</span>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function renderChart(months, datasets, dict) {
+      const isDark = document.documentElement.classList.contains('dark');
+      const ctx = document.getElementById('parallelChart').getContext('2d');
+      if (parallelChart) {
+        parallelChart.destroy();
+      }
+
+      const gridColor = isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.06)';
+      const tickColor = isDark ? '#64748B' : '#475569';
+      const tooltipBg = isDark ? '#0F172A' : '#FFFFFF';
+      const tooltipTitle = isDark ? '#F8FAFC' : '#0F172A';
+      const tooltipBody = isDark ? '#CBD5E1' : '#334155';
+      const tooltipBorder = isDark ? '#334155' : '#E2E8F0';
+
+      const monthPrefix = currentLang === 'en' ? 'Month ' : (currentLang === 'ru' ? 'Месяц ' : '');
+      const monthSuffix = currentLang === 'az' ? '-ci ay' : '';
+
+      parallelChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: months.map(m => `${monthPrefix}${m}${monthSuffix}`),
+          datasets: [
+            {
+              label: dict.leg_baseline,
+              data: datasets.u0,
+              borderColor: '#94A3B8',
+              backgroundColor: 'rgba(148, 163, 184, 0.05)',
+              borderDash: [5, 5],
+              borderWidth: 2,
+              tension: 0.3,
+              pointRadius: 2
+            },
+            {
+              label: dict.leg_u1,
+              data: datasets.u1,
+              borderColor: '#3B82F6',
+              backgroundColor: 'rgba(59, 130, 246, 0.12)',
+              fill: true,
+              borderWidth: 2.5,
+              tension: 0.38,
+              pointRadius: 3
+            },
+            {
+              label: dict.leg_u2,
+              data: datasets.u2,
+              borderColor: '#8B5CF6',
+              backgroundColor: 'rgba(139, 92, 246, 0.08)',
+              borderWidth: 2.5,
+              tension: 0.38,
+              pointRadius: 3
+            },
+            {
+              label: dict.leg_u3,
+              data: datasets.u3,
+              borderColor: '#10B981',
+              backgroundColor: 'rgba(16, 185, 129, 0.08)',
+              borderWidth: 2.5,
+              tension: 0.38,
+              pointRadius: 3
+            },
+            {
+              label: dict.leg_u4,
+              data: datasets.u4,
+              borderColor: '#F59E0B',
+              backgroundColor: 'rgba(245, 158, 11, 0.08)',
+              borderWidth: 2,
+              tension: 0.38,
+              pointRadius: 3
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: {
+            mode: 'index',
+            intersect: false
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: tooltipBg,
+              titleColor: tooltipTitle,
+              bodyColor: tooltipBody,
+              borderColor: tooltipBorder,
+              borderWidth: 1,
+              padding: 10,
+              callbacks: {
+                label: function(context) {
+                  return context.dataset.label + ': ' + context.parsed.y.toLocaleString() + ' ₼';
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: gridColor },
+              ticks: { color: tickColor, font: { family: 'JetBrains Mono', size: 10 } }
+            },
+            y: {
+              grid: { color: gridColor },
+              ticks: {
+                color: tickColor,
+                font: { family: 'JetBrains Mono', size: 10 },
+                callback: function(val) { return (val / 1000) + 'k ₼'; }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Stress Testing ("Black Swan")
+    function triggerStressTest() {
+      const btn = document.getElementById('btn-stress-test');
+      const dict = i18nData[currentLang] || i18nData.az;
+      btn.innerHTML = '<span class="animate-spin">⏳</span> Calculating...';
+      
+      setTimeout(() => {
+        const revEl = document.getElementById('inp-revenue');
+        const originalRev = parseFloat(revEl.value);
+        revEl.value = Math.round(originalRev * 0.80);
+        runLiveSimulation(true);
+        
+        btn.innerHTML = '⚠️ -20% Shock Active';
+        btn.className = 'px-3 py-1.5 rounded-lg bg-rose-600 text-white text-xs font-bold flex items-center gap-1.5';
+        
+        alert(dict.stress_test_alert);
+        
+        setTimeout(() => {
+          revEl.value = originalRev;
+          runLiveSimulation(false);
+          btn.innerHTML = `<i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i> <span>${dict.btn_stress_test}</span>`;
+          btn.className = 'px-3 py-1.5 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-600 dark:text-rose-300 border border-rose-500/40 text-xs font-bold flex items-center gap-1.5 transition active:scale-95';
+          lucide.createIcons();
+        }, 5000);
+      }, 500);
+    }
+
+    // Billing toggle
+    function setBillingPeriod(period) {
+      billingAnnual = period === 'annual';
+      document.getElementById('btn-bill-monthly').className = !billingAnnual ? 
+        'px-4 py-1.5 rounded-full font-bold bg-blue-500/15 text-blue-600 dark:text-blue-300 border border-blue-500/30 transition' :
+        'px-4 py-1.5 rounded-full font-medium text-adaptive-muted hover:text-adaptive-head transition';
+      document.getElementById('btn-bill-annual').className = billingAnnual ? 
+        'px-4 py-1.5 rounded-full font-bold bg-blue-500/15 text-blue-600 dark:text-blue-300 border border-blue-500/30 transition' :
+        'px-4 py-1.5 rounded-full font-medium text-adaptive-muted hover:text-adaptive-head transition';
+
+      document.getElementById('price-starter').innerText = billingAnnual ? '31 ₼' : '39 ₼';
+      document.getElementById('price-pro').innerText = billingAnnual ? '71 ₼' : '89 ₼';
+      document.getElementById('price-enterprise').innerText = billingAnnual ? '199 ₼' : '249 ₼';
+    }
+
+    // Modal Handlers
+    function openCheckoutModal(planName, price) {
+      const finalPrice = billingAnnual ? Math.round(price * 0.8) : price;
+      const dict = i18nData[currentLang] || i18nData.az;
+      document.getElementById('modal-plan-name').innerText = planName;
+      document.getElementById('modal-plan-price').innerText = `${finalPrice} AZN ${dict.per_month} ${billingAnnual ? '(Annual)' : ''}`;
+      document.getElementById('checkout-modal').classList.remove('hidden');
+    }
+
+    function closeCheckoutModal() {
+      document.getElementById('checkout-modal').classList.add('hidden');
+    }
+
+    function handleCheckoutSubmit(e) {
+      e.preventDefault();
+      closeCheckoutModal();
+      confetti({
+        particleCount: 120,
+        spread: 100,
+        origin: { y: 0.6 }
+      });
+      const msg = currentLang === 'en' 
+        ? 'Congratulations! Your Parallel Business subscription has been activated with a 14-day free trial.' 
+        : (currentLang === 'ru' 
+            ? 'Поздравляем! Ваша подписка на Parallel Business активирована с 14-дневным бесплатным периодом.' 
+            : 'Təbriklər! Parallel Business abunəliyiniz uğurla aktivləşdirildi.\n14 günlük limitsiz sınaq dövrünüz başladı.');
+      alert(msg);
+    }
+
+    function openAuthModal() {
+      document.getElementById('auth-modal').classList.remove('hidden');
+    }
+
+    function closeAuthModal() {
+      document.getElementById('auth-modal').classList.add('hidden');
+    }
+
+    function printExecutiveReport() {
+      window.print();
+    }
+
+    // Init on DOM Load
+    window.addEventListener('DOMContentLoaded', () => {
+      applyTheme(currentTheme);
+      setLanguage(currentLang);
+      setIndustry('cafe');
+    });
+  </script>
+</body>
+</html>

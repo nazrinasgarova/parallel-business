@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="az" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parallel Business — Hackathon Pitch Deck</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              blue: '#2563EB',
+              blueLight: '#3B82F6',
+              emerald: '#10B981',
+              rose: '#EF4444',
+              amber: '#F59E0B'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #0B0F17;
+      color: #F8FAFC;
+      user-select: none;
+    }
+    .slide {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+    .slide.active {
+      display: flex;
+      opacity: 1;
+    }
+    .glass-card {
+      background: #111726;
+      border: 1px solid #1E293B;
+      box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+    }
+    .highlight-glow {
+      box-shadow: 0 0 50px -10px rgba(37, 99, 235, 0.25);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between overflow-hidden">
+
+  <!-- TOP HEADER / NAV BAR -->
+  <header class="h-16 border-b border-slate-800/80 px-8 flex items-center justify-between z-20 bg-[#0B0F17]/90 backdrop-blur-md">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
+        <i data-lucide="git-fork" class="w-4 h-4"></i>
+      </div>
+      <div>
+        <span class="font-extrabold tracking-tight text-white text-base">PARALLEL BUSINESS</span>
+        <span class="text-[10px] text-slate-400 font-mono ml-2 border border-slate-700 px-1.5 py-0.5 rounded">HACKATHON DECK</span>
+      </div>
+    </div>
+
+    <!-- Slide progress indicators -->
+    <div class="flex items-center gap-2" id="slide-indicators">
+      <!-- Generated via JS -->
+    </div>
+
+    <div class="flex items-center gap-4">
+      <span id="slide-counter" class="text-xs font-mono text-slate-400">1 / 8</span>
+      <a href="index.html" target="_blank" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white flex items-center gap-1.5 transition">
+        <i data-lucide="external-link" class="w-3.5 h-3.5"></i> Canlı Saytı Aç
+      </a>
+    </div>
+  </header>
+
+  <!-- SLIDES CONTAINER -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-6 py-8 flex flex-col justify-center relative z-10">
+
+    <!-- SLIDE 1: COVER -->
+    <div class="slide active flex-col items-center text-center justify-center gap-6" data-slide="1">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs font-mono text-blue-400">
+        <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+        AI-Powered Decision Intelligence & Digital Twin
+      </div>
+      <h1 class="text-5xl sm:text-6xl font-black tracking-tight leading-tight max-w-4xl text-white">
+        Real Qərar Verməzdən Əvvəl, <br>
+        <span class="bg-gradient-to-r from-blue-400 via-indigo-300 to-blue-500 bg-clip-text text-transparent">
+          4 Alternativ Gələcəyi
+        </span> Simulyasiya Edin.
+      </h1>
+      <p class="text-lg text-slate-400 max-w-2xl font-light">
+        Sahibkarlar üçün riskləri sıfırlayan, qiymət artımını, filial açılışını və marketinqi real pulla deyil, riyazi kainatlarda sınaqdan keçirən B2B platforma.
+      </p>
+
+      <div class="flex items-center gap-6 mt-6 text-xs text-slate-400 font-mono">
+        <div class="flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i> Mikroiqtisadi Elastiklik</div>
+        <div class="flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i> Monte Carlo Simulyasiyası</div>
+        <div class="flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i> AI Virtual Direktorlar Şurası</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 2: THE PROBLEM -->
+    <div class="slide flex-col justify-center gap-8" data-slide="2">
+      <div>
+        <span class="text-xs font-mono text-rose-500 font-bold tracking-wider uppercase">01 / Problem (Bazar Ağrısı)</span>
+        <h2 class="text-4xl font-extrabold text-white mt-1">KOB-ların 70%-i Niyə İlk 12 Ayda İflas Edir?</h2>
+        <p class="text-sm text-slate-400 mt-1">Səbəb ideyanın pis olması deyil — geriyə dönüşü olmayan <strong>tək bir səhv qərar</strong>dır.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="glass-card p-6 rounded-2xl border-l-4 border-rose-500">
+          <div class="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center mb-4 font-bold text-lg">1</div>
+          <h3 class="text-base font-bold text-white mb-2">Tələsik Qiymət Dəyişikliyi</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Qiyməti 10% qaldırırlar, tələb elastikliyini bilmədikləri üçün müştərilərin 30%-i rəqibə qaçır və kassa çökür.
+          </p>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl border-l-4 border-rose-500">
+          <div class="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center mb-4 font-bold text-lg">2</div>
+          <h3 class="text-base font-bold text-white mb-2">Erkən 2-ci Filial (Likvidlik)</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            35,000 AZN təmir xərcləyib filial açırlar, 4-cü ayda kassa sıfırlanır, əsas biznes də borcun içinə batır.
+          </p>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl border-l-4 border-rose-500">
+          <div class="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center mb-4 font-bold text-lg">3</div>
+          <h3 class="text-base font-bold text-white mb-2">Bahalı CFO & Kor Təxminlər</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Peşəkar Maliyyə Direktoru (CFO) tutmaq ayda 3,000+ AZN-dir. Kiçik sahibkar qərarları "ürəyimə belə damdı" hissi ilə verir.
+          </p>
+        </div>
+      </div>
+
+      <div class="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-center text-xs text-rose-300 font-mono">
+        💡 Nəticə: Sahibkarlar qərarları sınaqdan keçirmək üçün <strong>öz real pullarını və illərini</strong> riskə atırlar.
+      </div>
+    </div>
+
+    <!-- SLIDE 3: THE SOLUTION -->
+    <div class="slide flex-col justify-center gap-8" data-slide="3">
+      <div>
+        <span class="text-xs font-mono text-blue-400 font-bold tracking-wider uppercase">02 / Həll (Bizim Təklifimiz)</span>
+        <h2 class="text-4xl font-extrabold text-white mt-1">Parallel Business: Qərarların Rəqəmsal Əkizi</h2>
+        <p class="text-sm text-slate-400 mt-1">Real həyatda səhv etmək yerinə, süni intellektlə paralel gələcəkləri sınaqdan keçirin.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="glass-card p-6 rounded-2xl border-blue-500/40 highlight-glow">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold">
+              <i data-lucide="layers" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-white">4 Paralel Kainat Simulyatoru</h3>
+              <span class="text-xs text-slate-400">Anlıq qərar müqayisəsi</span>
+            </div>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed mb-4">
+            Sistem eyni vaxtda 4 alternativ gələcəyi modelləşdirir: 
+            <strong>Status-Kvo, Qiymət Optimizasiyası, 2-ci Filial Açılışı</strong> və <strong>Marketinq Aqressiyası</strong>. Hansının daha çox qazanc gətirdiyini və kassanı qoruduğunu 1 saniyədə tapır.
+          </p>
+          <div class="flex items-center gap-2 text-[11px] text-blue-400 font-mono">
+            <i data-lucide="zap" class="w-3.5 h-3.5"></i> 100% Real vaxtda dinamik hesablama
+          </div>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl border-emerald-500/40">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold">
+              <i data-lucide="users" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-white">AI Virtual Direktorlar Şurası</h3>
+              <span class="text-xs text-slate-400">CFO + CMO + CRO bir arada</span>
+            </div>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed mb-4">
+            Sahibkara tək rəqəmlər yox, 3 peşəkar rəhbərin dili ilə izahat verir: 
+            <strong>CFO</strong> kassa likvidliyini, <strong>CMO</strong> müştəri axınını, <strong>CRO</strong> isə böhran riskini analiz edərək 3 addımlıq konkret hərəkət planı təqdim edir.
+          </p>
+          <div class="flex items-center gap-2 text-[11px] text-emerald-400 font-mono">
+            <i data-lucide="award" class="w-3.5 h-3.5"></i> Hər bir sahibkar üçün cib Maliyyə Şurası
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-4 gap-4 text-center font-mono text-xs">
+        <div class="glass-card p-3 rounded-xl border border-slate-800">
+          <div class="text-blue-400 font-bold text-base">3 Saniyə</div>
+          <div class="text-[10px] text-slate-400">Simulyasiya Sürəti</div>
+        </div>
+        <div class="glass-card p-3 rounded-xl border border-slate-800">
+          <div class="text-emerald-400 font-bold text-base">1,000 Dövr</div>
+          <div class="text-[10px] text-slate-400">Monte Carlo Testi</div>
+        </div>
+        <div class="glass-card p-3 rounded-xl border border-slate-800">
+          <div class="text-amber-400 font-bold text-base">3 Dil (AZ/EN/RU)</div>
+          <div class="text-[10px] text-slate-400">Regional Uyğunluq</div>
+        </div>
+        <div class="glass-card p-3 rounded-xl border border-slate-800">
+          <div class="text-rose-400 font-bold text-base">-20% Şok</div>
+          <div class="text-[10px] text-slate-400">Böhran Stress Testi</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 4: THE DEEP TECH & ENGINE -->
+    <div class="slide flex-col justify-center gap-8" data-slide="4">
+      <div>
+        <span class="text-xs font-mono text-blue-400 font-bold tracking-wider uppercase">03 / Texnologiya və Riyazi Mühərrik</span>
+        <h2 class="text-4xl font-extrabold text-white mt-1">Süni İntellekt Sadəcə Mətn Deyil, Dəqiq Riyaziyyatdır</h2>
+        <p class="text-sm text-slate-400 mt-1">Parallel Business quru generativ AI deyil, elmi mikroiqtisadi modellər üzərində qurulub.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="glass-card p-6 rounded-2xl">
+          <div class="text-xs font-mono text-blue-400 font-bold uppercase mb-2">Formul 1</div>
+          <h3 class="text-base font-bold text-white mb-2">Qiymət Elastikliyi (PED)</h3>
+          <div class="bg-slate-900 p-2.5 rounded-lg font-mono text-xs text-blue-300 mb-3 border border-slate-800">
+            ΔQ = ε · ΔP
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Kafe (-1.35), Retail (-1.6), SaaS (-0.8) və E-ticarət (-1.8) üçün fərqli sektor elastiklik əmsalları ilə müştəri itkisini və xalis marjanı hesablayır.
+          </p>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl">
+          <div class="text-xs font-mono text-emerald-400 font-bold uppercase mb-2">Formul 2</div>
+          <h3 class="text-base font-bold text-white mb-2">Filial Ramp-Up & Capex</h3>
+          <div class="bg-slate-900 p-2.5 rounded-lg font-mono text-xs text-emerald-300 mb-3 border border-slate-800">
+            Cash_m = Cash - Capex + Σ(Profit_m)
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            2-ci filialın açılış xərclərini, 6 aylıq gəlirə çıxış (ramp-up) əyrisini və kassa boşluğunu (cash burnout) aybaay proqnozlaşdırır.
+          </p>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl">
+          <div class="text-xs font-mono text-amber-400 font-bold uppercase mb-2">Formul 3</div>
+          <h3 class="text-base font-bold text-white mb-2">Monte Carlo Simulyasiyası</h3>
+          <div class="bg-slate-900 p-2.5 rounded-lg font-mono text-xs text-amber-300 mb-3 border border-slate-800">
+            1,000 İterasiya & Normal Paylanma
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Bazarın gözlənilməz təsadüfi dalğalanmalarında biznesin <strong>P10 (Pessimist)</strong>, <strong>P90 (Optimist)</strong> və ümumi uğur ehtimalını (94.8%) hesablayır.
+          </p>
+        </div>
+      </div>
+
+      <div class="glass-card p-4 rounded-xl flex items-center justify-between border border-slate-800 text-xs">
+        <div class="flex items-center gap-3">
+          <span class="w-3 h-3 rounded-full bg-emerald-400"></span>
+          <span class="text-slate-300 font-medium">Bazar Böhranı Stress Testi (-20% Şok): Qəfil inflyasiya və böhranda sağ qalma testi.</span>
+        </div>
+        <span class="text-emerald-400 font-mono font-bold">100% Deterministic Engine</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 5: LIVE DEMO SHOWCASE -->
+    <div class="slide flex-col justify-center gap-8" data-slide="5">
+      <div>
+        <span class="text-xs font-mono text-blue-400 font-bold tracking-wider uppercase">04 / Məhsul İnterfeysi & Demo</span>
+        <h2 class="text-4xl font-extrabold text-white mt-1">İcraçı Səviyyəli UI & Sadə İstifadə</h2>
+        <p class="text-sm text-slate-400 mt-1">Heç bir çətin təlimat tələb olunmur — sahibkar 1 kliklə qərarını test edir.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="glass-card p-5 rounded-2xl">
+          <div class="text-blue-400 font-mono text-sm font-bold mb-1">Addım 1</div>
+          <h4 class="text-base font-bold text-white mb-2">Sektoru və Baza Rəqəmləri Seç</h4>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Kafe, Retail, SaaS, E-ticarət və ya Xidmət şablonuna basdıqda real dövriyyə və xərc rəqəmləri avtomatik dolur.
+          </p>
+        </div>
+
+        <div class="glass-card p-5 rounded-2xl">
+          <div class="text-blue-400 font-mono text-sm font-bold mb-1">Addım 2</div>
+          <h4 class="text-base font-bold text-white mb-2">Slayderlərlə Qərarları Dəyiş</h4>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Qiyməti +12% qaldır, filial büdcəsini seç, marketinq xərclərini çək və ya sərbəst mətnlə AI-a ideyanı yaz.
+          </p>
+        </div>
+
+        <div class="glass-card p-5 rounded-2xl">
+          <div class="text-blue-400 font-mono text-sm font-bold mb-1">Addım 3</div>
+          <h4 class="text-base font-bold text-white mb-2">Qalib Qərarı & Hesabatı Gör</h4>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Sistem dərhal ən gəlirli qərarı seçir, 12 aylıq qrafiki göstərir və investorlar üçün PDF hesabatını çıxarır.
+          </p>
+        </div>
+      </div>
+
+      <div class="text-center pt-4">
+        <a href="index.html" target="_blank" class="inline-flex items-center gap-3 px-8 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm tracking-wide shadow-xl shadow-blue-600/30 transition transform hover:scale-105">
+          <i data-lucide="play" class="w-4 h-4 fill-current"></i> Canlı Simulyasiyanı İndi Göstər (Live Demo)
+        </a>
+      </div>
+    </div>
+
+    <!-- SLIDE 6: BUSINESS MODEL & MONETIZATION -->
+    <div class="slide flex-col justify-center gap-8" data-slide="6">
+      <div>
+        <span class="text-xs font-mono text-blue-400 font-bold tracking-wider uppercase">05 / Pul Qazanma (Biznes Modeli)</span>
+        <h2 class="text-4xl font-extrabold text-white mt-1">B2B SaaS Abunəlik Modeli</h2>
+        <p class="text-sm text-slate-400 mt-1">"Yanlış filialda 40,000 AZN itirmək yerinə, ayda bir kofe qiymətinə qərarını sığortala."</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="glass-card p-6 rounded-2xl">
+          <span class="text-xs font-mono text-slate-400 font-bold uppercase">Başlanğıc</span>
+          <h3 class="text-xl font-bold text-white mt-1">Starter</h3>
+          <div class="text-3xl font-extrabold font-mono text-white my-3">39 ₼ <span class="text-xs text-slate-400 font-normal">/ ay</span></div>
+          <ul class="text-xs text-slate-300 space-y-2 mb-6 font-light">
+            <li>• Kiçik mağaza və kafelər üçün</li>
+            <li>• Ayda 15 canlı simulyasiya</li>
+            <li>• 6 aylıq qrafik proqnozu</li>
+          </ul>
+          <div class="text-[11px] text-slate-400 font-mono">Hedef: Solo sahibkarlar</div>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl border-2 border-blue-500 shadow-xl shadow-blue-500/10 relative">
+          <span class="absolute -top-3 right-4 px-2 py-0.5 rounded bg-blue-600 text-white text-[10px] font-bold font-mono">ƏN POPULYAR</span>
+          <span class="text-xs font-mono text-blue-400 font-bold uppercase">Böyüyən Şirkətlər</span>
+          <h3 class="text-xl font-bold text-white mt-1">Growth Pro</h3>
+          <div class="text-3xl font-extrabold font-mono text-white my-3">89 ₼ <span class="text-xs text-slate-400 font-normal">/ ay</span></div>
+          <ul class="text-xs text-slate-300 space-y-2 mb-6 font-light">
+            <li>• Limitsiz paralel simulyasiya</li>
+            <li>• 1,000 dövr Monte Carlo risk analizi</li>
+            <li>• AI Virtual İdarə Heyəti (CFO, CMO, CRO)</li>
+            <li>• PDF İcraçı Hesabat çıxarışı</li>
+          </ul>
+          <div class="text-[11px] text-blue-400 font-mono">14 günlük pulsuz sınaq</div>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl">
+          <span class="text-xs font-mono text-indigo-400 font-bold uppercase">Şəbəkələr & Holdinq</span>
+          <h3 class="text-xl font-bold text-white mt-1">Enterprise</h3>
+          <div class="text-3xl font-extrabold font-mono text-white my-3">249 ₼ <span class="text-xs text-slate-400 font-normal">/ ay</span></div>
+          <ul class="text-xs text-slate-300 space-y-2 mb-6 font-light">
+            <li>• Çoxfiliallı şəbəkələr üçün</li>
+            <li>• 1C & Bank API inteqrasiyası</li>
+            <li>• Fərdi öyrədilmiş AI modeli</li>
+            <li>• 24/7 Fərdi Maliyyə Dəstəyi</li>
+          </ul>
+          <div class="text-[11px] text-slate-400 font-mono">Satış şöbəsi ilə əlaqə</div>
+        </div>
+      </div>
+
+      <div class="p-4 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-between text-xs font-mono">
+        <span class="text-slate-300">İlk İl Hədəfi (Azərbaycan): Cəmi 300 Pro Abunəçi</span>
+        <span class="text-emerald-400 font-bold text-sm">~320,000 AZN İllik Təkrar Gəlir (ARR)</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 7: MARKET OPPORTUNITY & COMPETITIVE MOAT -->
+    <div class="slide flex-col justify-center gap-8" data-slide="7">
+      <div>
+        <span class="text-xs font-mono text-blue-400 font-bold tracking-wider uppercase">06 / Bazar Potensialı və Üstünlüyümüz</span>
+        <h2 class="text-4xl font-extrabold text-white mt-1">Niyə Məhz Biz Və Niyə İndi?</h2>
+        <p class="text-sm text-slate-400 mt-1">Biz böyük korporasiyaların sahib olduğu imkanları kiçik biznesin cibinə gətiririk.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="glass-card p-6 rounded-2xl text-center">
+          <div class="text-3xl font-black text-blue-400 font-mono mb-1">350,000+</div>
+          <div class="text-sm font-bold text-white">Azərbaycanda KOB Sayı</div>
+          <p class="text-xs text-slate-400 mt-2">Dövlət Statistika Komitəsinin rəsmi qeydiyyatda olan aktiv biznes subyektləri.</p>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl text-center">
+          <div class="text-3xl font-black text-emerald-400 font-mono mb-1">$4.8 Milyard</div>
+          <div class="text-sm font-bold text-white">Regional Bazar (TAM)</div>
+          <p class="text-xs text-slate-400 mt-2">MDB, Türkiyə və Mərkəzi Asiya üzrə B2B Decision Intelligence bazarı.</p>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl text-center">
+          <div class="text-3xl font-black text-amber-400 font-mono mb-1">0 Birbaşa Rəqib</div>
+          <div class="text-sm font-bold text-white">Lokal Üstünlük</div>
+          <p class="text-xs text-slate-400 mt-2">Azərbaycan və MDB-də mikroiqtisadi elastiklik və kassa simulyasiyası edən tək alət.</p>
+        </div>
+      </div>
+
+      <div class="glass-card p-6 rounded-2xl border-slate-800">
+        <h4 class="text-xs font-mono uppercase font-bold text-slate-300 mb-3">Rəqabət Üstünlüklərimiz (Competitive Moat):</h4>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs text-slate-400">
+          <div><strong class="text-white block mb-1">1. Exceldən 100x Sürətli:</strong> Mürəkkəb cədvəllər yox, 3 saniyəyə dinamik qrafiklər.</div>
+          <div><strong class="text-white block mb-1">2. Direktorlar Şurası:</strong> Sadəcə quru rəqəm deyil, insan dilində canlı biznes tövsiyəsi.</div>
+          <div><strong class="text-white block mb-1">3. Trilingual (3 Dil):</strong> Azərbaycan, İngilis və Rus dillərində dərhal hazır.</div>
+          <div><strong class="text-white block mb-1">4. API Ekosistemi:</strong> Gələcəkdə 1C və bank hesablarından avtomatik daxil olma.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 8: VISION & CLOSING -->
+    <div class="slide flex-col items-center text-center justify-center gap-6" data-slide="8">
+      <div class="w-16 h-16 rounded-2xl bg-blue-600/20 text-blue-400 border border-blue-500/40 flex items-center justify-center font-bold text-2xl shadow-xl shadow-blue-500/20">
+        <i data-lucide="rocket" class="w-8 h-8"></i>
+      </div>
+      
+      <span class="text-xs font-mono text-blue-400 uppercase tracking-widest font-bold">Gələcəyin Qərar Texnologiyası</span>
+
+      <h2 class="text-5xl sm:text-6xl font-black tracking-tight text-white max-w-3xl leading-tight">
+        "Paralel Dünyada Simulyasiya Edin, Real Dünyada Qazanın!"
+      </h2>
+
+      <p class="text-base text-slate-400 max-w-xl font-light">
+        Parallel Business hər bir sahibkarın masasında oturan virtual İdarə Heyəti və risk sığortasıdır.
+      </p>
+
+      <div class="flex items-center gap-4 mt-6">
+        <a href="index.html" target="_blank" class="px-8 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm tracking-wide shadow-xl shadow-blue-600/30 transition transform hover:scale-105 flex items-center gap-2">
+          <i data-lucide="play" class="w-4 h-4 fill-current"></i> Canlı Məhsulu Sınaqdan Keçirin
+        </a>
+      </div>
+
+      <div class="pt-8 text-xs text-slate-500 font-mono">
+        Diqqətiniz üçün təşəkkür edirik! Suallarınızı cavablandırmağa hazırıq.
+      </div>
+    </div>
+
+  </main>
+
+  <!-- BOTTOM CONTROLS & KEYBOARD HINTS -->
+  <footer class="h-16 border-t border-slate-800/80 px-8 flex items-center justify-between z-20 bg-[#0B0F17]/90 text-xs text-slate-400">
+    <div class="flex items-center gap-4">
+      <span class="hidden sm:inline">Naviqasiya: Klaviaturanın <strong>← Sol</strong> və <strong>Sağ →</strong> oxları və ya <strong>Space</strong></span>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <button onclick="prevSlide()" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white transition flex items-center gap-1 font-medium">
+        <i data-lucide="chevron-left" class="w-4 h-4"></i> Əvvəlki
+      </button>
+      <button onclick="nextSlide()" class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition flex items-center gap-1 font-bold">
+        Növbəti <i data-lucide="chevron-right" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </footer>
+
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 8;
+
+    function initIndicators() {
+      const container = document.getElementById('slide-indicators');
+      container.innerHTML = '';
+      for (let i = 1; i <= totalSlides; i++) {
+        const dot = document.createElement('button');
+        dot.className = `w-7 h-1.5 rounded-full transition-all duration-300 ${i === currentSlide ? 'bg-blue-500 w-10' : 'bg-slate-700 hover:bg-slate-600'}`;
+        dot.onclick = () => goToSlide(i);
+        container.appendChild(dot);
+      }
+    }
+
+    function showSlide(index) {
+      if (index < 1) index = 1;
+      if (index > totalSlides) index = totalSlides;
+      currentSlide = index;
+
+      document.querySelectorAll('.slide').forEach(slide => {
+        slide.classList.remove('active');
+        if (parseInt(slide.getAttribute('data-slide')) === currentSlide) {
+          slide.classList.add('active');
+        }
+      });
+
+      document.getElementById('slide-counter').innerText = `${currentSlide} / ${totalSlides}`;
+      initIndicators();
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) {
+        showSlide(currentSlide + 1);
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) {
+        showSlide(currentSlide - 1);
+      }
+    }
+
+    function goToSlide(index) {
+      showSlide(index);
+    }
+
+    // Keyboard navigation
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        prevSlide();
+      }
+    });
+
+    // Init
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      showSlide(1);
+    });
+  </script>
+</body>
+</html>
