@@ -1,6 +1,14 @@
-# 🌌 PARALLEL BUSINESS — Alternativ Gələcəklərin AI Simulyatoru
+# 🌌 PARALLEL BUSINESS — Alternativ Gələcəklərin Qərar Mühərriki
 
-> **"Real qərar verməzdən əvvəl, biznesinizin 4 alternativ gələcəyini canlı görün."**
+> **"Real qərar verməzdən əvvəl, biznesinizin 4 alternativ gələcəyini canlı simulyasiya edin."**
+
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Active_Netlify-2563EB?style=for-the-badge&logo=netlify)](https://singular-gecko-f7c761.netlify.app)
+[![Pitch Deck](https://img.shields.io/badge/Pitch_Deck-8_Interactive_Slides-10B981?style=for-the-badge)](https://singular-gecko-f7c761.netlify.app/presentation.html)
+
+* 🌐 **Canlı Veb Sayt (Demo URL):** [https://singular-gecko-f7c761.netlify.app](https://singular-gecko-f7c761.netlify.app)
+* 📊 **İnteraktiv Prezentasiya (Pitch Deck):** [https://singular-gecko-f7c761.netlify.app/presentation.html](https://singular-gecko-f7c761.netlify.app/presentation.html)
+
+---
 
 **Parallel Business** — Sahibkarların və menecerlərin real kapital və vaxt itirmədən öncə strateji qərarlarının (qiymət dəyişikliyi, yeni filial açılışı, marketinq büdcəsi, işçi heyətinin artırılması) nəticələrini süni intellekt və riyazi modellərlə sınaqdan keçirməsi üçün hazırlanmış **B2B SaaS Qərar Simulyasiya Platformasıdır**.
 
@@ -28,13 +36,13 @@
 3. **Monte Carlo Simulyasiyası (1,000 İterasiya):**
    - Bazar volatilliyini təsadüfi dalğalanmalarla 1,000 dəfə sınaqdan keçirərək uğur ehtimalını (%) və ən pis halı (10-cu persentil) göstərir.
 
-4. **"Qara Qu quşu" (Black Swan) Stress Testi:**
+4. **Bazar Böhranı Stress Testi (-20% Şok):**
    - Qəfil -20% bazar böhranında hansı ssenarilərin iflas etdiyini dərhal xəbərdar edir.
 
 5. **AI Virtual İdarə Heyəti (Executive Advisory):**
    - **CFO AI:** Likvidlik və nağd pul təhlükəsizliyi təhlili.
    - **CMO AI:** CAC/LTV, bazar payı və müştəri reaksiyası.
-   - **CRO AI:** Ən pis risk dərəcələri və kredit riskləri.
+   - **CRO AI:** Ən pis risk dərəcələri və bazar tənəzzülü riskləri.
    - **Yekun Qərar Tövsiyəsi:** Addım-addım tətbiq planı.
 
 ---
@@ -53,22 +61,22 @@
 
 Layihə 2 fərqli rejimdə istifadə oluna bilər:
 
-### 1. Ultra-Müasir Veb Səhifəsi (Brauzerdə)
+### 1. Canlı Veb Səhifəsi (Brauzerdə)
 * Qovluqdakı `index.html` faylını iki dəfə klikləyərək istənilən brauzerdə açın.
-* Və ya `run.bat` faylını işə salıb **[1]** seçin.
+* Və ya canlı link: [https://singular-gecko-f7c761.netlify.app](https://singular-gecko-f7c761.netlify.app)
 * Heç bir əlavə quraşdırma tələb etmir. Bütün interaktiv qrafiklər, kalkulyatorlar və abunə modalları tam işlək vəziyyətdədir.
 
 ### 2. Streamlit Dashboard (Python)
-Terminaldan:
+Gərəkli paketləri quraşdırın:
 ```bash
+pip install -r requirements.txt
 streamlit run app.py
 ```
-və ya `run.bat` faylını işə salıb **[2]** seçin.
 Dashboard avtomatik olaraq brauzerdə `http://localhost:8501` ünvanında açılacaq.
 
 ---
 
 ## 📊 Texnoloji Yığın (Tech Stack)
-- **Frontend Web Platform:** HTML5, Tailwind CSS (Dark Glassmorphism UI), Chart.js, Lucide Icons, Canvas Confetti.
+- **Frontend Web Platform:** HTML5, Tailwind CSS, Chart.js, Lucide Icons, Canvas Confetti.
 - **Backend / Python Engine:** Python 3.11+, Streamlit, Plotly, NumPy, Pandas.
-- **Riyazi Modellər:** Price Elasticity of Demand ($\Delta Q = \epsilon \cdot \Delta P$), Customer Acquisition Cost ($CAC$), Customer Lifetime Value ($LTV$), Geometric Brownian Motion / Monte Carlo Random Walks.
+- **Riyazi Modellər:** Price Elasticity of Demand ($\Delta Q = \epsilon \cdot \Delta P$), Customer Acquisition Cost ($CAC$), Customer Lifetime Value ($LTV$), Monte Carlo Gaussian Random Walk.
